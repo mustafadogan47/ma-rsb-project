@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaRBS - Bayi ve İşletme Yönetim Sistemi</title>
+    <link rel="stylesheet" href="styles/index.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <canvas id="particleCanvas"></canvas>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>MaRSB</h1>
+                <span class="logo-subtitle">İş Yönetim Platformu</span>
+            </div>
+            <div class="nav-links">
+                <a href="#about" class="nav-link">Hakkımızda</a>
+                <a href="#features" class="nav-link">Özellikler</a>
+                <a href="#pricing" class="nav-link">Planlar</a>
+                <a href="#faq" class="nav-link">SSS</a>
+                <a href="#contact" class="nav-link">İletişim</a>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn btn-outline" id="loginBtn">Giriş Yap</button>
+                <button class="btn btn-primary" id="registerBtn">Kayıt Ol</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title animate-in">
+                    <span class="typed-text">İŞLETMENİZİ DİJİTALLEŞTİRİN</span>
+                </h1>
+                <p class="hero-subtitle animate-in delay-1">MaRBS ile bayi ve işletme yönetiminizi tek platformda kolayca yönetin</p>
+                <div class="hero-buttons animate-in delay-2">
+                    <button class="btn btn-large btn-primary" id="heroRegisterBtn">Hemen Başla</button>
+                    <button class="btn btn-large btn-outline" id="heroLoginBtn">Giriş Yap</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">Hakkımızda</h2>
+            <div class="about-content">
+                <p>MaRBS, bayi ve işletmelerin sipariş, stok ve iletişim süreçlerini tek bir platformda birleştirerek dijital dönüşümü hızlandıran modern bir iş yönetim çözümüdür.</p>
+                <p>Amacımız; işletmelerin verimliliğini artırmak, karar alma süreçlerini veri ile desteklemek ve kolay kullanılabilir bir arayüzle günlük işleri basitleştirmektir.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">Neden MaRBS?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Detaylı Raporlama</h3>
+                    <p>Satış ve sipariş verilerinizi anlık olarak takip edin. Grafikler ve raporlarla işletmenizi analiz edin.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤝</div>
+                    <h3>Bayi Yönetimi</h3>
+                    <p>Bayilerinizi kolayca yönetin. Sipariş takibi, stok durumu ve iletişimi tek noktadan kontrol edin.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📦</div>
+                    <h3>Sipariş Sistemi</h3>
+                    <p>Sipariş oluşturma, onaylama ve takip süreçlerini otomatikleştirin. Zamandan ve maliyetten tasarruf edin.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>7/24 Destek</h3>
+                    <p>Entegre destek sistemi ile sorunlarınızı hızla çözün. Canlı destek ve yardım merkezi her zaman yanınızda.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Güvenli Platform</h3>
+                    <p>Verileriniz şifreli ve güvenli sunucularda saklanır. Yedekleme ve güvenlik protokolleri ile huzurlu olun.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚙️</div>
+                    <h3>Kolay Kullanım</h3>
+                    <p>Sezgisel arayüz sayesinde teknik bilgiye ihtiyaç duymadan tüm işlemlerinizi gerçekleştirin.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- User Types Section -->
+    <section class="user-types">
+        <div class="container">
+            <h2 class="section-title">İki Farklı Kullanıcı Türü</h2>
+            <div class="types-grid">
+                <div class="type-card">
+                    <div class="type-badge">Satıcı</div>
+                    <h3>Bayi Paneli</h3>
+                    <ul class="type-features">
+                        <li>✓ Ürün listeleme ve yönetimi</li>
+                        <li>✓ Sipariş alma ve takip</li>
+                        <li>✓ İşletmelerle iletişim</li>
+                        <li>✓ Satış raporları</li>
+                        <li>✓ Stok yönetimi</li>
+                    </ul>
+                </div>
+                <div class="type-card">
+                    <div class="type-badge">Alıcı</div>
+                    <h3>İşletme Paneli</h3>
+                    <ul class="type-features">
+                        <li>✓ Bayilerden ürün siparişi</li>
+                        <li>✓ Sipariş geçmişi ve takip</li>
+                        <li>✓ Bayi değerlendirme</li>
+                        <li>✓ Harcama raporları</li>
+                        <li>✓ Favori bayi listesi</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <h2 class="section-title">Planlar</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Başlangıç</h3>
+                    <p>Yeni başlayan işletmeler için temel özellikler</p>
+                    <p class="price">₺0 / ay</p>
+                    <ul>
+                        <li>✓ Temel raporlama</li>
+                        <li>✓ Sipariş takibi</li>
+                        <li>✓ E-posta desteği</li>
+                    </ul>
+                </div>
+                <div class="pricing-card">
+                    <h3>Profesyonel</h3>
+                    <p>Gelişen işletmeler için kapsamlı özellikler</p>
+                    <p class="price">₺199 / ay</p>
+                    <ul>
+                        <li>✓ Gelişmiş raporlama</li>
+                        <li>✓ Çoklu bayi yönetimi</li>
+                        <li>✓ Öncelikli destek</li>
+                    </ul>
+                </div>
+                <div class="pricing-card">
+                    <h3>Kurumsal</h3>
+                    <p>Özel ihtiyaçlara göre özelleştirilmiş çözümler</p>
+                    <p class="price">İletişime geçin</p>
+                    <ul>
+                        <li>✓ Özelleştirilmiş modüller</li>
+                        <li>✓ API entegrasyonları</li>
+                        <li>✓ Özel eğitim</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq">
+        <div class="container">
+            <h2 class="section-title">Sık Sorulan Sorular</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <h3>MaRBS nedir?</h3>
+                    <p>Bayi ve işletmeler için sipariş, stok ve iletişimi bir arada sunan modern bir yönetim platformudur.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Destek nasıl çalışır?</h3>
+                    <p>Uygulama içi yardım merkezi ve e-posta ile 7/24 destek sağlıyoruz.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Verilerim güvende mi?</h3>
+                    <p>Tüm veriler şifreli olarak saklanır ve düzenli yedeklenir.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close" id="closeLogin">&times;</span>
+            <h2>Giriş Yap</h2>
+            
+            <!-- Kullanıcı Türü Seçimi -->
+            <div id="loginUserTypeSelection" class="user-type-selection">
+                <p class="text-center mb-4">Giriş yapmak için türünüzü seçin:</p>
+                <div class="user-type-cards">
+                    <button type="button" class="user-type-card" data-type="bayi">
+                        <div class="user-type-icon">🏪</div>
+                        <h3>Bayi</h3>
+                        <p>Satıcı Paneli</p>
+                    </button>
+                    <button type="button" class="user-type-card" data-type="isletme">
+                        <div class="user-type-icon">🏢</div>
+                        <h3>İşletme</h3>
+                        <p>Alıcı Paneli</p>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="loginForm" style="display: none;">
+                <input type="hidden" name="user_type" id="loginUserType">
+                <button type="button" class="btn-back" id="loginBackBtn">← Geri</button>
+                <div id="loginFields">
+                    <div class="form-group">
+                        <label>Kullanıcı Adı</label>
+                        <input type="text" name="username" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Şifre</label>
+                        <input type="password" name="password" required class="form-control">
+                    </div>
+                    <div class="alert" id="loginAlert" style="display: none;"></div>
+                    <button type="submit" class="btn btn-primary btn-block">Giriş Yap</button>
+                </div>
+            </form>
+            <p class="modal-footer-text">Hesabınız yok mu? <a href="#" id="switchToRegister">Kayıt Ol</a></p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <span class="close" id="closeRegister">&times;</span>
+            <h2>Kayıt Ol</h2>
+            
+            <!-- Kullanıcı Türü Seçimi -->
+            <div id="registerUserTypeSelection" class="user-type-selection">
+                <p class="text-center mb-4">Kayıt olmak için türünüzü seçin:</p>
+                <div class="user-type-cards">
+                    <button type="button" class="user-type-card" data-type="bayi">
+                        <div class="user-type-icon">🏪</div>
+                        <h3>Bayi</h3>
+                        <p>Satıcı Hesabı</p>
+                    </button>
+                    <button type="button" class="user-type-card" data-type="isletme">
+                        <div class="user-type-icon">🏢</div>
+                        <h3>İşletme</h3>
+                        <p>Alıcı Hesabı</p>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Register Form -->
+            <form id="registerForm" style="display: none;">
+                <input type="hidden" name="user_type" id="registerUserType">
+                <button type="button" class="btn-back" id="registerBackBtn">← Geri</button>
+                <div id="registerFields">
+                    <div class="form-group">
+                        <label>Kullanıcı Adı</label>
+                        <input type="text" name="username" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>E-posta</label>
+                        <input type="email" name="email" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Şifre</label>
+                        <input type="password" name="password" required class="form-control">
+                    </div>
+                    <div class="alert" id="registerAlert" style="display: none;"></div>
+                    <button type="submit" class="btn btn-primary btn-block">Kayıt Ol</button>
+                </div>
+            </form>
+            <p class="modal-footer-text">Zaten hesabınız var mı? <a href="#" id="switchToLogin">Giriş Yap</a></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="contact" class="footer">
+        <div class="container">
+            <h2 class="section-title">İletişim</h2>
+            <div class="contact-grid">
+                <div class="contact-block">
+                    <h3>Adres</h3>
+                    <p>MaRBS Teknoloji A.Ş.<br/>Yeni Mah. Dijital Cad. No:10<br/>İstanbul, Türkiye</p>
+                </div>
+                <div class="contact-block">
+                    <h3>İletişim</h3>
+                    <p>Telefon: +90 212 000 00 00<br/>E-posta: destek@marbs.com</p>
+                </div>
+                <div class="contact-block">
+                    <h3>Sosyal Medya</h3>
+                    <p>
+                        <a href="#" class="nav-link">LinkedIn</a> ·
+                        <a href="#" class="nav-link">Twitter</a> ·
+                        <a href="#" class="nav-link">Instagram</a>
+                    </p>
+                </div>
+            </div>
+            <p class="copyright">&copy; 2024 MaRBS. Tüm hakları saklıdır.</p>
+        </div>
+    </footer>
+
+    <script src="scripts/particles.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/typewriter.js"></script>
+</body>
+</html>

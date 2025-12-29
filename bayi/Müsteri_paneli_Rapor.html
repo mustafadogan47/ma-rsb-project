@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- GÜNCELLENDİ: Başlık -->
+    <title>MaRSB - Raporlar</title>
+    
+    <!-- YENİ: Favicon (Sekme Logosu) eklendi -->
+    <link rel="icon" href="logo_2-rfytkufjykj.png" type="image/png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../scripts/auth-manager.js"></script>
+    <!-- YENİ: Chart.js (Grafikler için) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        .sidebar-active {
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .sidebar-link {
+             transition: all 0.2s ease-in-out;
+        }
+        .sidebar-link:hover {
+            background-color: #e2e8f0; /* slate-200 */
+            transform: translateX(4px);
+        }
+        /* YENİ: Yüklenme animasyonu için */
+        .loader {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #3b82f6; /* Blue */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-slate-100">
+
+    <!-- Ana sarmalayıcı - GÜNCELLENDİ: h-screen (içten kaydırma için) -->
+    <div class="flex h-screen">
+        
+        <!-- Sidebar - GÜNCELLENDİ: Tamamen modernize edildi -->
+        <aside id="sidebar" class="w-64 bg-white shadow-lg flex flex-col transition-all duration-300 ease-in-out group sticky top-0 h-screen">
+            <div id="sidebar-content" class="flex flex-col flex-1 min-h-0">
+                
+                <!-- Logo Alanı - GÜNCELLENDİ: Çift logo sistemi eklendi -->
+                <div class="flex items-center justify-start px-4 group-[.is-collapsed]:justify-center group-[.is-collapsed]:px-2 h-20 border-b border-slate-200 overflow-hidden">
+                    <a href="#" class="flex-shrink-0">
+                        <!-- BÜYÜK Logo -->
+                        <img src="logo_son-removebg-preview.png" alt="Logo" 
+                             class="h-20 w-auto group-[.is-collapsed]:hidden" 
+                             onerror="this.src='https://placehold.co/120x30/3b82f6/ffffff?text=BAYİ+LOGO'; this.onerror=null;">
+                        <!-- KÜÇÜK Logo -->
+                        <img src="logo_2-rfytkufjykj.png" alt="Logo Küçük" 
+                             class="h-10 w-12 hidden group-[.is-collapsed]:block" 
+                             onerror="this.src='https://placehold.co/40x40/3b82f6/ffffff?text=M'; this.onerror=null;">
+                    </a>
+                </div>
+
+                <!-- YENİ: Menü Kapatma Butonu -->
+                <div class="p-4 border-b border-slate-200 group-[.is-collapsed]:hidden">
+                    <button id="menu-toggle-close" class="w-full flex items-center p-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-gray-100 transition-colors">
+                        <svg class="w-6 h-6 mr-2 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" />
+                        </svg>
+                        <span class="font-semibold text-sm">Menüyü Kapat</span>
+                    </button>
+                </div>
+                <!-- YENİ: Menü Açma Butonu -->
+                <div class="p-4 border-b border-slate-200 hidden group-[.is-collapsed]:block">
+                     <button id="menu-toggle-open" class="w-full flex items-center justify-center p-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-gray-100 transition-colors">
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </button>
+                </div>
+            
+            <!-- Menü Alanı (Bayi Menüsü) - GÜNCELLENDİ: Daraltma desteği eklendi -->
+            <nav class="flex-1 p-4 overflow-y-auto">
+                <ul class="space-y-2">
+                    <li>
+                        <!-- Anasayfa (İnaktif) -->
+                        <a href="yenibyiweb.html" class="flex items-center px-4 py-3 text-sm font-semibold text-slate-700 rounded-lg sidebar-link group-[.is-collapsed]:justify-center">
+                            <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25A2.25 2.25 0 0113.5 8.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
+                            <span class="ml-3 group-[.is-collapsed]:hidden">Anasayfa</span>
+                        </a>
+                    </li>
+                     <li>
+                        <!-- Siparişler (İnaktif) -->
+                        <a href="siparis_sayfası.html" class="flex items-center px-4 py-3 text-sm font-semibold text-slate-700 rounded-lg sidebar-link group-[.is-collapsed]:justify-center">
+                            <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" /></svg>
+                            <span class="ml-3 group-[.is-collapsed]:hidden">Siparişler</span>
+                        </a>
+                    </li>
+                    <li>
+                        <!-- Raporlar (Aktif Menü) -->
+                        <a href="Müsteri_paneli_Rapor.html" class="flex items-center px-4 py-3 text-sm font-semibold rounded-lg sidebar-active group-[.is-collapsed]:justify-center">
+                            <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v18h18M3.75 18.75h16.5M5.25 12.75h3l2.25-4.5 3 6 3-3h3.75" /></svg>
+                            <span class="ml-3 group-[.is-collapsed]:hidden">Raporlar</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <!-- Alt Menü (Ayarlar) - GÜNCELLENDİ: "Hakkımızda" eklendi -->
+            <nav class="p-4 border-t border-slate-200 mt-auto">
+                 <ul class="space-y-2">
+                     <li>
+                        <a href="Marsb_Hakkımızda.html" class="flex items-center px-4 py-3 text-sm font-semibold text-slate-700 rounded-lg sidebar-link group-[.is-collapsed]:justify-center">
+                            <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                            </svg>
+                            <span class="ml-3 group-[.is-collapsed]:hidden">Hakkımızda</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="marsb_ayarlar.html" class="flex items-center px-4 py-3 text-sm font-semibold text-slate-700 rounded-lg sidebar-link group-[.is-collapsed]:justify-center">
+                            <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-1.007 1.113-1.113l.44-.08c.295-.057.6-.057.89 0l.44.08c.542.09.956.514 1.058.985l.02.189a7.15 7.15 0 013.882 3.882l.189.02c.47.102.895.516.985 1.058l.08.44c.057.295.057.6 0 .89l-.08.44c-.09.542-.514.956-.985 1.058l-.189.02a7.15 7.15 0 01-3.882 3.882l-.02.189c-.102.47-.516.895-1.058.985l-.44.08c-.295-.057-.6.057-.89 0l-.44-.08c-.542-.09-1.007-.514-1.113-.985l-.02-.189a7.15 7.15 0 01-3.882-3.882l-.189-.02c-.47-.102-.895-.516-.985-1.058l-.08-.44a1.86 1.86 0 010-.89l.08-.44c.09-.542.514-1.007.985-1.113l.189-.02a7.15 7.15 0 013.882-3.882l.02-.189z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                            <span class="ml-3 group-[.is-collapsed]:hidden">Ayarlar</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            </div> <!-- sidebar-content div sonu -->
+        </aside>
+
+        <!-- Ana İçerik Alanı - GÜNCELLENDİ: overflow-hidden eklendi -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header - GÜNCELLENDİ: Standart header eklendi -->
+            <header class="bg-white shadow-sm h-20 flex items-center justify-between px-8 sticky top-0 z-50 flex-shrink-0">
+                <!-- Arama Çubuğu -->
+                <div class="flex-1 max-w-xl">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
+                        <input type="text" placeholder="Tedarikçi veya ürün ara..." class="w-full bg-slate-100 border-2 border-transparent rounded-full py-2 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition">
+                    </div>
+                </div>
+
+                <!-- Sağ Taraf Aksiyonlar -->
+                <div class="flex items-center space-x-6 ml-6">
+                    <!-- Konum Seçici -->
+                    <div class="relative" id="location-menu">
+                        <button id="location-button" class="flex items-center space-x-2 text-left">
+                            <svg class="w-6 h-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                            </svg>
+                            <div class="hidden md:block">
+                                <span class="text-sm font-semibold text-gray-700 block">Konum</span>
+                                <span class="text-xs text-gray-500">Marmara Bölgesi</span>
+                            </div>
+                        </button>
+                        <!-- Konum Açılır Menü -->
+                        <div id="location-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl p-4 z-20">
+                            <h4 class="font-semibold mb-2">Bölge Seçin</h4>
+                            <ul>
+                                <li><a href="#" class="block px-2 py-1 text-sm hover:bg-slate-100 rounded">Marmara Bölgesi</a></li>
+                                <li><a href="#" class="block px-2 py-1 text-sm hover:bg-slate-100 rounded">Ege Bölgesi</a></li>
+                                <li><a href="#" class="block px-2 py-1 text-sm hover:bg-slate-100 rounded">Akdeniz Bölgesi</a></li>
+                            </ul>
+                            <p class="text-xs text-gray-400 mt-2">Detaylı il/ilçe seçimi için devam ediniz.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Sepet -->
+                    <a href="#" class="relative text-gray-600 hover:text-blue-600 transition-colors">
+                        <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.823-6.836a.75.75 0 00-.54-1.022H5.137c-.51 0-.962.343-1.087.835L2.25 3H1.5M16.5 21a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm-9 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                        </svg>
+                        <span class="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">3</span>
+                    </a>
+
+                    <!-- Mesajlar -->
+                    <a href="#" class="relative text-gray-600 hover:text-blue-600 transition">
+                        <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                        </svg>
+                        <span class="absolute -top-1 -right-2 bg-blue-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </a>
+
+                    <!-- Bildirimler -->
+                    <a href="#" class="relative text-gray-600 hover:text-blue-600 transition">
+                        <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                        </svg>
+                        <span class="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">2</span>
+                    </a>
+                    
+                    <!-- Profil Dropdown -->
+                    <div class="relative" id="profile-menu">
+                        <button id="profile-button" class="flex items-center space-x-2 text-sm font-semibold text-gray-700 hover:text-blue-600 transition">
+                            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span class="hidden md:inline">Hesabım</span>
+                        </button>
+                        <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl py-2 z-20">
+                            <a href="marsb_ayarlar.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-100">Ayarlar</a>
+                            <a href="Marsb_destek.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-100">Destek</a>
+                            <div class="border-t my-1"></div>
+                             <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">Çıkış Yap</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- İçerik (Kaydırılabilir) -->
+            <main class="flex-1 p-8 overflow-y-auto bg-slate-100">
+                <div class="container mx-auto px-4">
+                    <!-- Dashboard Başlığı -->
+                    <section class="mb-8">
+                        <div class="flex flex-col md:flex-row justify-between items-center">
+                            <div>
+                                <!-- GÜNCELLENDİ: Başlık -->
+                                <h1 id="sayfa-basligi" class="text-3xl font-bold text-gray-800">Raporlar</h1>
+                                <p id="sayfa-aciklamasi" class="text-gray-500 mt-1">İşletmenizin detaylı analizleri.</p>
+                            </div>
+                            <div class="flex items-center space-x-2 mt-4 md:mt-0">
+                                <!-- GÜNCELLENDİ: Butona ID eklendi -->
+                                <button id="toggle-rapor-btn" class="px-4 py-2 text-sm font-semibold text-gray-700 bg-white border rounded-full hover:bg-slate-100 transition">
+                                    Yapay Zeka Raporları
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- YENİ: Genel Bakış İçeriği Sarmalayıcısı -->
+                    <div id="genel-bakis-icerik">
+                        <!-- İstatistik Kartları -->
+                        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <h4 class="text-sm font-semibold text-gray-500">Bekleyen Sipariş</h4>
+                                <p class="text-3xl font-extrabold text-blue-600 mt-1">12</p>
+                                <p class="text-xs text-gray-400 mt-1">+2 yeni sipariş</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <h4 class="text-sm font-semibold text-gray-500">Tamamlanan Sipariş</h4>
+                                <p class="text-3xl font-extrabold text-green-600 mt-1">84</p>
+                                <p class="text-xs text-gray-400 mt-1">Son 24 saatte</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <h4 class="text-sm font-semibold text-gray-500">Günlük Ciro</h4>
+                                <p class="text-3xl font-extrabold text-gray-800 mt-1">₺14,250</p>
+                                <p class="text-xs text-green-500 mt-1">+%8.2 artış</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <h4 class="text-sm font-semibold text-gray-500">Yeni Mesaj</h4>
+                                <p class="text-3xl font-extrabold text-red-500 mt-1">3</p>
+                                <p class="text-xs text-gray-400 mt-1">Bayilerden gelen</p>
+                            </div>
+                        </section>
+
+                        <!-- Son Siparişler ve Popüler Ürünler -->
+                        <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <!-- Son Siparişler Tablosu -->
+                            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-md">
+                                <h3 class="text-xl font-bold text-gray-800 mb-4">Son Siparişler</h3>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-sm">
+                                        <thead class="text-left text-gray-500">
+                                            <tr>
+                                                <th class="p-3 font-semibold">Bayi</th>
+                                                <th class="p-3 font-semibold">Tarih</th>
+                                                <th class="p-3 font-semibold">Tutar</th>
+                                                <th class="p-3 font-semibold">Durum</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="border-t hover:bg-slate-50">
+                                                <td class="p-3 font-semibold text-gray-700">Can Market</td>
+                                                <td class="p-3 text-gray-600">09.10.2025</td>
+                                                <td class="p-3 text-gray-600">₺2,150.75</td>
+                                                <td class="p-3"><span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Teslim Edildi</span></td>
+                                            </tr>
+                                            <tr class="border-t hover:bg-slate-50">
+                                                <td class="p-3 font-semibold text-gray-700">Yıldız Gıda</td>
+                                                <td class="p-3 text-gray-600">09.10.2025</td>
+                                                <td class="p-3 text-gray-600">₺1,840.00</td>
+                                                <td class="p-3"><span class="px-2 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full">Yola Çıktı</span></td>
+                                            </tr>
+                                            <tr class="border-t hover:bg-slate-50">
+                                                <td class="p-3 font-semibold text-gray-700">Lezzet Büfe</td>
+                                                <td class="p-3 text-gray-600">08.10.2025</td>
+                                                <td class="p-3 text-gray-600">₺980.50</td>
+                                                <td class="p-3"><span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full">Hazırlanıyor</span></td>
+                                            </tr>
+                                            <tr class="border-t hover:bg-slate-50">
+                                                <td class="p-3 font-semibold text-gray-700">Paşa Fırın</td>
+                                                <td class="p-3 text-gray-600">08.10.2025</td>
+                                                <td class="p-3 text-gray-600">₺3,400.00</td>
+                                                <td class="p-3"><span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Teslim Edildi</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Popüler Ürünler -->
+                            <div class="bg-white p-6 rounded-xl shadow-md">
+                                <h3 class="text-xl font-bold text-gray-800 mb-4">Popüler Ürünler</h3>
+                                <div class="space-y-4">
+                                    <div class="flex items-center">
+                                        <img src="https://placehold.co/64x64/F1F5F9/475569?text=Sütaş+1L" alt="Product" class="w-16 h-16 rounded-lg object-cover" onerror="this.src='https://placehold.co/64x64'; this.onerror=null;">
+                                        <div class="ml-4">
+                                            <p class="font-semibold text-gray-800">Sütaş Süt 1L</p>
+                                            <p class="text-sm text-gray-500">1200 adet satıldı</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <img src="https://placehold.co/64x64/F1F5F9/475569?text=Ayran" alt="Product" class="w-16 h-16 rounded-lg object-cover" onerror="this.src='https://placehold.co/64x64'; this.onerror=null;">
+                                        <div class="ml-4">
+                                            <p class="font-semibold text-gray-800">Sütaş Ayran 300ml</p>
+                                            <p class="text-sm text-gray-500">950 adet satıldı</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <img src="https://placehold.co/64x64/F1F5F9/475569?text=Yoğurt" alt="Product" class="w-16 h-16 rounded-lg object-cover" onerror="this.src='https://placehold.co/64x64'; this.onerror=null;">
+                                        <div class="ml-4">
+                                            <p class="font-semibold text-gray-800">Sütaş Kaymaksız Yoğurt</p>
+                                            <p class="text-sm text-gray-500">780 adet satıldı</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div> <!--#genel-bakis-icerik sonu -->
+
+                    <!-- YENİ: Yapay Zeka Rapor Alanı (Başlangıçta gizli) -->
+                    <div id="yapay-zeka-icerik" class="hidden">
+                        
+                        <!-- 1. Adım: Analiz Yöntemi Seçimi -->
+                        <div id="ai-upload-area" class="bg-white p-6 rounded-xl shadow-md">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">Yapay Zeka Analizi Başlat</h3>
+                            <p class="text-slate-600 mb-6">Analiz için bir veri kaynağı seçin:</p>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                                
+                                <!-- Seçenek 1: Uygulama Verilerini Kullan -->
+                                <div class="border border-slate-200 rounded-lg p-6 flex flex-col items-center text-center h-full">
+                                    <svg class="w-12 h-12 text-blue-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 7.5h-.75A2.25 2.25 0 004.5 9.75v7.5a2.25 2.25 0 002.25 2.25h7.5a2.25 2.25 0 002.25-2.25v-7.5a2.25 2.25 0 00-2.25-2.25h-.75m0-3l-3-3m0 0l-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 012.25 2.25v7.5a2.25 2.25 0 01-2.25 2.25h-7.5a2.25 2.25 0 01-2.25-2.25v-.75" />
+                                    </svg>
+                                    <h4 class="text-lg font-semibold text-slate-800 mb-2">Mevcut Sipariş Verileri</h4>
+                                    <p class="text-sm text-slate-500 mb-6">Platformdaki mevcut sipariş, ciro ve popüler ürün verilerinizi kullanarak otomatik analiz yapın.</p>
+                                    <!-- YENİ Buton ID -->
+                                    <button id="start-analysis-app-btn" class="w-full mt-auto py-3 px-6 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition">
+                                        Uygulama Verileriyle Analiz Et
+                                    </button>
+                                </div>
+
+                                <!-- Seçenek 2: Belge Yükle -->
+                                <div class="border border-slate-200 rounded-lg p-6 flex flex-col items-center text-center h-full">
+                                    <svg class="w-12 h-12 text-slate-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                                    </svg>
+                                    <h4 class="text-lg font-semibold text-slate-800 mb-2">Harici Belge Yükle</h4>
+                                    <p class="text-sm text-slate-500 mb-6">Satış verilerinizi içeren (Excel, CSV) bir belge yükleyerek analiz yapın.</p>
+                                    
+                                    <!-- Dosya Yükleme Alanı (Küçültüldü) -->
+                                    <div id="file-drop-zone" class="w-full border-2 border-dashed border-slate-300 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 hover:bg-slate-50 transition">
+                                        <p class="text-sm text-slate-600">
+                                            <span class="font-semibold text-blue-600">Yüklemek için tıkla</span>
+                                            <span id="file-name-display" class="block text-xs text-green-700 font-semibold mt-1"></span>
+                                        </p>
+                                        <input id="ai-file-input" type="file" class="sr-only" accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel">
+                                    </div>
+                                    
+                                    <!-- Analiz Başlat Butonu (Dosya için) -->
+                                    <button id="start-analysis-file-btn" class="w-full mt-4 py-3 px-6 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition disabled:bg-slate-400 disabled:cursor-not-allowed" disabled>
+                                        Belgeyle Analiz Et
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- 2. Adım: Yüklenme Göstergesi (Gizli) -->
+                        <div id="ai-analysis-loading" class="hidden flex flex-col items-center justify-center bg-white p-10 rounded-xl shadow-md min-h-[300px]">
+                            <div class="loader"></div>
+                            <p class="text-lg font-semibold text-slate-700 mt-4">Belgeniz analiz ediliyor...</p>
+                            <p class="text-sm text-slate-500">Bu işlem birkaç saniye sürebilir.</p>
+                        </div>
+                        
+                        <!-- 3. Adım: Yüklenen İçerik (Başlangıçta gizli) -->
+                        <div id="ai-analysis-results" class="hidden space-y-8"> <!-- YENİ: space-y-8 eklendi -->
+
+                            <!-- YENİ: Özet Analiz Kartları -->
+                            <section>
+                                <h3 class="text-xl font-bold text-gray-800 mb-4">Analiz Özeti</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-500">
+                                        <h4 class="text-sm font-semibold text-gray-500">Tahmini Ciro Artışı (30 Gün)</h4>
+                                        <p class="text-3xl font-extrabold text-blue-600 mt-1">+%15.4</p>
+                                        <p class="text-xs text-gray-400 mt-1">Sütaş Ayran ve Süt satışları kaynaklı</p>
+                                    </div>
+                                    <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-yellow-500">
+                                        <h4 class="text-sm font-semibold text-gray-500">Acil Stok Uyarısı</h4>
+                                        <p class="text-3xl font-extrabold text-yellow-600 mt-1">Sütaş Yoğurt</p>
+                                        <p class="text-xs text-gray-400 mt-1">Tahmini 8 gün içinde tükenecek</p>
+                                    </div>
+                                    <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-500">
+                                        <h4 class="text-sm font-semibold text-gray-500">Büyüme Fırsatı</h4>
+                                        <p class="text-3xl font-extrabold text-green-600 mt-1">Meyve Suyu</p>
+                                        <p class="text-xs text-gray-400 mt-1">Lezzet Büfe'ye çapraz satış önerisi</p>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- Gelişmiş Analizler (Grafik ve Metin) -->
+                            <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                <!-- Grafik Alanı (Mevcut) -->
+                                <div class="bg-white p-6 rounded-xl shadow-md">
+                                    <h3 class="text-xl font-bold text-gray-800 mb-4">Ürün Bazlı Satış Tahmini (30 Gün)</h3>
+                                    <canvas id="aiSatisGrafik"></canvas>
+                                </div>
+                                
+                                <!-- YENİ: Yeni Doughnut Grafik Alanı -->
+                                <div class="bg-white p-6 rounded-xl shadow-md">
+                                    <h3 class="text-xl font-bold text-gray-800 mb-4">Kategori Bazlı Harcama Dağılımı</h3>
+                                    <canvas id="aiKategoriGrafik"></canvas>
+                                </div>
+
+                                <!-- Metin Analizi Alanı (Mevcut) -->
+                                <div class="bg-white p-6 rounded-xl shadow-md">
+                                    <h3 class="text-xl font-bold text-gray-800 mb-4">Yapay Zeka Önerileri</h3>
+                                    <div class="space-y-4 text-slate-700">
+                                        <p><strong class="text-blue-600">Satış Tahmini:</strong> Sonraki 30 gün içinde, özellikle <span class="font-semibold">Sütaş Ayran</span> ve <span class="font-semibold">Sütaş Süt 1L</span> ürünlerinde %15'lik bir satış artışı öngörülmektedir. Bu artış, mevsimsel verilere ve Pazar talebine dayanmaktadır.</p>
+                                        <p><strong class="text-green-600">Stok Önerisi:</strong> <span class="font-semibold">Sütaş Kaymaksız Yoğurt</span> stoğunuz kritik seviyeye yaklaşmaktadır. Tahminlenen talebi karşılamak için en az 200 adet daha sipariş vermeniz önerilir.</p>
+                                        <p><strong class="text-yellow-600">Fırsat Alanı:</strong> Raporlara göre, <span class="font-semibold">Lezzet Büfe</span> ve <span class="font-semibold">Paşa Fırın</span> gibi müşterileriniz, yoğurt ile birlikte genellikle meyve suyu alımı yapmaktadır. Bu müşterilere <span class="font-semibold">meyve suyu</span> kategorisinde çapraz satış kampanyası yapmanız, sipariş başına ciroyu artırabilir.</p>
+                                    </div>
+                                </div>
+
+                                <!-- YENİ: Detaylı Analiz Metin Alanı -->
+                                <div class="bg-blue-50 p-6 rounded-xl shadow-md">
+                                    <h3 class="text-xl font-bold text-blue-800 mb-4">Detaylı Müşteri Analizi</h3>
+                                    <div class="space-y-4 text-slate-700">
+                                        <p><strong class="text-blue-600">En Değerli Müşteriler (Ciro):</strong></p>
+                                        <ul class="list-disc list-inside text-sm">
+                                            <li><strong>Paşa Fırın:</strong> Yüksek hacimli ve düzenli alım yapıyor. Süt ve yoğurt ana kalemleri.</li>
+                                            <li><strong>Can Market:</strong> Ayran ve meşrubat odaklı. Yeni kampanyalara hızlı tepki veriyor.</li>
+                                        </ul>
+                                        <p><strong class="text-blue-600">Riskli Müşteriler (Sipariş Azalması):</strong></p>
+                                        <ul class="list-disc list-inside text-sm">
+                                            <li><strong>Yıldız Gıda:</strong> Son 2 haftada sipariş frekansı %40 azaldı. İletişime geçilmesi önerilir.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div> <!--#yapay-zeka-icerik sonu -->
+                    
+
+                    <!-- Footer (Standart) - GÜNCELLENDİ -->
+                    <footer class="bg-slate-800 text-slate-300 mt-16 -mx-12 -mb-8"> <!-- Negatif margin ile main'in padding'ini sıfırlar -->
+                        <div class="container mx-auto px-12 py-12"> <!-- Footer için iç padding -->
+                            <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
+                                <div>
+                                    <h4 class="text-lg font-semibold text-white mb-4">MaRSB</h4>
+                                    <p class="text-sm">Tedarik zincirinizi dijitalleştirerek işletmenizi bir adım öne taşıyın.</p>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-semibold text-white mb-4">Hızlı Erişim</h4>
+                                    <ul>
+                                        <li><a href="#" class="hover:text-white transition">Hakkımızda</a></li>
+                                        <li><a href="#" class="hover:text-white transition">Kayıt Ol</a></li>
+                                        <li><a href="#" class="hover:text-white transition">Giriş Yap</a></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-semibold text-white mb-4">İletişim</h4>
+                                    <ul class="space-y-2 text-sm">
+                                        <li class="flex items-center justify-center md:justify-start">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                            Örnek Mah. Örnek Sk. No:123, Örnek/İL
+                                        </li>
+                                        <li class="flex items-center justify-center md:justify-start">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                            +90 555 123 45 67
+                                        </li>
+                                        <li class="flex items-center justify-center md:justify-start">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                            info@marsb.com
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="border-t border-slate-700 mt-8 pt-6 text-center text-sm">
+                                <p>&copy; 2024 MaRSB. Tüm hakları saklıdır.</p>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <!-- YENİ: Javascript eklendi -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- Standart Menü Scriptleri ---
+            
+            // Konum Menüsü
+            const locationButton = document.getElementById('location-button');
+            const locationDropdown = document.getElementById('location-dropdown');
+            const locationMenu = document.getElementById('location-menu');
+
+            if (locationButton && locationDropdown && locationMenu) {
+                locationButton.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    locationDropdown.classList.toggle('hidden');
+                });
+                document.addEventListener('click', function (event) {
+                    if (!locationMenu.contains(event.target)) {
+                        locationDropdown.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Profil Menüsü
+            const profileButton = document.getElementById('profile-button');
+            const profileDropdown = document.getElementById('profile-dropdown');
+            const profileMenu = document.getElementById('profile-menu');
+
+            if (profileButton && profileDropdown && profileMenu) {
+                profileButton.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    profileDropdown.classList.toggle('hidden');
+                });
+                document.addEventListener('click', function (event) {
+                    if (!profileMenu.contains(event.target)) {
+                        profileDropdown.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Sidebar Toggle Script
+            const toggleClose = document.getElementById('menu-toggle-close');
+            const toggleOpen = document.getElementById('menu-toggle-open');
+            const sidebar = document.getElementById('sidebar');
+
+            function toggleMenu() {
+                sidebar.classList.toggle('w-64'); // Geniş (default)
+                sidebar.classList.toggle('w-20'); // Dar (5rem)
+                sidebar.classList.toggle('is-collapsed'); // Tailwind 'group' için yardımcı class
+            }
+
+            if (toggleClose && toggleOpen && sidebar) {
+                toggleClose.addEventListener('click', toggleMenu);
+                toggleOpen.addEventListener('click', toggleMenu);
+            }
+            
+            // --- YENİ: Yapay Zeka Rapor Toggle Scripti ---
+            
+            const toggleBtn = document.getElementById('toggle-rapor-btn');
+            const genelBakıs = document.getElementById('genel-bakis-icerik');
+            const yapayZeka = document.getElementById('yapay-zeka-icerik');
+            const sayfaBasligi = document.getElementById('sayfa-basligi');
+            const sayfaAciklamasi = document.getElementById('sayfa-aciklamasi');
+            
+            // AI Alanı elementleri
+            const aiUploadArea = document.getElementById('ai-upload-area');
+            const aiAnalysisLoading = document.getElementById('ai-analysis-loading');
+            const aiAnalysisResults = document.getElementById('ai-analysis-results');
+            
+            // AI Form elementleri
+            const fileDropZone = document.getElementById('file-drop-zone');
+            const aiFileInput = document.getElementById('ai-file-input');
+            const fileNameDisplay = document.getElementById('file-name-display');
+            // const fileInfo = document.getElementById('file-info'); // Bu div kaldırıldı, gereksiz
+            
+            // YENİ: Buton ID'leri güncellendi
+            const startAnalysisAppBtn = document.getElementById('start-analysis-app-btn');
+            const startAnalysisFileBtn = document.getElementById('start-analysis-file-btn');
+            
+            let aiRaporuGosteriliyor = false;
+            let aiGrafikCizildi = false; // Grafiğin tekrar tekrar çizilmesini önle
+
+            toggleBtn.addEventListener('click', function() {
+                aiRaporuGosteriliyor = !aiRaporuGosteriliyor;
+                
+                if (aiRaporuGosteriliyor) {
+                    // Yapay Zeka Raporunu Göster
+                    genelBakıs.classList.add('hidden');
+                    yapayZeka.classList.remove('hidden');
+                    
+                    // Tüm AI adımlarını sıfırla ve sadece yüklemeyi göster
+                    aiUploadArea.classList.remove('hidden');
+                    aiAnalysisLoading.classList.add('hidden');
+                    aiAnalysisResults.classList.add('hidden');
+                    
+                    // Formu sıfırla
+                    aiFileInput.value = null;
+                    // fileInfo.classList.add('hidden'); // Kaldırıldı
+                    fileNameDisplay.textContent = '';
+                    startAnalysisFileBtn.disabled = true; // Dosya butonu pasif
+                    
+                    sayfaBasligi.textContent = 'Yapay Zeka Analizleri';
+                    sayfaAciklamasi.textContent = 'Satış tahminleri ve stok önerileri.';
+                    toggleBtn.textContent = 'Genel Bakışa Dön';
+                    
+                } else {
+                    // Genel Bakışı Göster
+                    genelBakıs.classList.remove('hidden');
+                    yapayZeka.classList.add('hidden');
+                    
+                    sayfaBasligi.textContent = 'Raporlar';
+                    sayfaAciklamasi.textContent = 'İşletmenizin detaylı analizleri.';
+                    toggleBtn.textContent = 'Yapay Zeka Raporları';
+                }
+            });
+            
+            // --- AI Form İşlemleri ---
+
+            // Dosya bırakma alanına tıklanınca inputu tetikle
+            if (fileDropZone) {
+                fileDropZone.addEventListener('click', () => {
+                    aiFileInput.click();
+                });
+            }
+
+            // Dosya seçildiğinde
+            if (aiFileInput) {
+                aiFileInput.addEventListener('change', () => {
+                    if (aiFileInput.files.length > 0) {
+                        const fileName = aiFileInput.files[0].name;
+                        fileNameDisplay.textContent = `Seçilen: ${fileName}`; // Dosya adını göster
+                        startAnalysisFileBtn.disabled = false; // Butonu aktif et
+                    } else {
+                        fileNameDisplay.textContent = '';
+                        startAnalysisFileBtn.disabled = true;
+                    }
+                });
+            }
+            
+            // YENİ: Analizi başlatan ortak fonksiyon
+            function startAnalysis() {
+                // 1. Yükleme ekranını göster
+                aiUploadArea.classList.add('hidden');
+                aiAnalysisLoading.classList.remove('hidden');
+                aiAnalysisResults.classList.add('hidden');
+
+                // 2. Sahte bir analiz süresi (API çağrısını simüle eder)
+                setTimeout(() => {
+                    // 3. Sonuçları göster
+                    aiAnalysisLoading.classList.add('hidden');
+                    aiAnalysisResults.classList.remove('hidden');
+                    
+                    // 4. Grafiği çiz (veya yeniden çiz)
+                    let existingChart = Chart.getChart("aiSatisGrafik");
+                    if (existingChart) {
+                        existingChart.destroy();
+                    }
+                    renderAISatisGrafik();
+
+                    // YENİ: Doughnut grafiği çiz
+                    let existingDoughnut = Chart.getChart("aiKategoriGrafik");
+                    if (existingDoughnut) {
+                        existingDoughnut.destroy();
+                    }
+                    renderAIKategoriGrafik();
+                    
+                    aiGrafikCizildi = true; 
+                    
+                }, 2000); // 2 saniye bekle
+            }
+
+            // Analizi Başlat (Uygulama Verisi) butonuna tıklanınca
+            if (startAnalysisAppBtn) {
+                startAnalysisAppBtn.addEventListener('click', startAnalysis);
+            }
+            
+            // Analizi Başlat (Dosya) butonuna tıklanınca
+            if (startAnalysisFileBtn) {
+                startAnalysisFileBtn.addEventListener('click', startAnalysis);
+            }
+            
+            // Örnek Grafik Çizdirme Fonksiyonu
+            function renderAISatisGrafik() {
+                const ctx = document.getElementById('aiSatisGrafik').getContext('2d');
+                if (ctx) {
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: ['Hafta 1', 'Hafta 2', 'Hafta 3', 'Hafta 4 (Tahmin)'],
+                            datasets: [{
+                                label: 'Sütaş Ayran Satışları (Adet)',
+                                data: [120, 140, 130, 155], // 155 tahmini
+                                borderColor: 'rgb(59, 130, 246)',
+                                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                fill: true,
+                                tension: 0.3
+                            },
+                            {
+                                label: 'Sütaş Süt 1L Satışları (Adet)',
+                                data: [80, 85, 95, 110], // 110 tahmini
+                                borderColor: 'rgb(34, 197, 94)',
+                                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                                fill: true,
+                                tension: 0.3
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Ürün Bazlı Satış Tahmini'
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    console.error("Grafik için 'aiSatisGrafik' canvas elementi bulunamadı.");
+                }
+            }
+
+            // YENİ: Kategori Grafiği Çizdirme
+            function renderAIKategoriGrafik() {
+                const ctx = document.getElementById('aiKategoriGrafik').getContext('2d');
+                if (ctx) {
+                    new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Süt Ürünleri', 'Meşrubat', 'Tatlı', 'Diğer'],
+                            datasets: [{
+                                label: 'Harcama Dağılımı',
+                                data: [45, 25, 20, 10],
+                                backgroundColor: [
+                                    'rgba(59, 130, 246, 0.8)', // Blue
+                                    'rgba(239, 68, 68, 0.8)',  // Red
+                                    'rgba(245, 158, 11, 0.8)', // Amber
+                                    'rgba(107, 114, 128, 0.8)' // Gray
+                                ],
+                                hoverOffset: 4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                },
+                                title: {
+                                    display: false,
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    console.error("Grafik için 'aiKategoriGrafik' canvas elementi bulunamadı.");
+                }
+            }
+            
+            // Auth yönetimi - Bayi sayfası için
+            const auth = new AuthManager('bayi');
+        });
+    </script>
+    
+</body>
+</html>
+
+
+
+

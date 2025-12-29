@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- BAŞLIK GÜNCELLENDİ: Satıcı Anasayfa -->
+    <title>MaRSB - Satıcı Anasayfa</title>
+    
+    <!-- YENİ: Favicon (Sekme Logosu) eklendi -->
+    <link rel="icon" href="logo_son-removebg-preview.png" type="image/png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../scripts/auth-manager.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        
+        .sidebar-active {
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8); /* GERİ ALINDI: Mavi tonları */
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .sidebar-link {
+             transition: all 0.2s ease-in-out;
+        }
+        .sidebar-link:hover {
+            background-color: #e2e8f0; /* slate-200 */
+            transform: translateX(4px);
+        }
+        
+        /* SATICI PANELİ İÇİN KART STİLİ */
+        .stat-card {
+            transition: all 0.3s ease;
+            /* GÜNCELLENDİ: Hatalı yorum satırı temizlendi */
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+    </style>
+</head>
+<body class="bg-slate-100">
+
+    <!-- Ana sarmalayıcı, tüm ekranı kaplar -->
+    <div class="flex h-screen">
+        
+        <!-- Sidebar (Sol Menü) -->
+        <aside id="sidebar" class="w-64 bg-white shadow-lg flex flex-col transition-all duration-300 ease-in-out group">
+            <div id="sidebar-content" class="flex flex-col flex-1 min-h-0">
+                
+                <!-- Logo Alanı -->
+                <!-- GÜNCELLENDİ: Logo sabitlemesi için 'justify-center' yerine 'justify-start px-4' kullanıldı -->
+                <!-- YENİ: overflow-hidden eklendi -->
+                <!-- GÜNCELLENDİ: Menü daraldığında ortalamak için group utility'leri eklendi (px-2) -->
+                <div class="flex items-center justify-start px-4 group-[.is-collapsed]:justify-center group-[.is-collapsed]:px-2 h-20 border-b border-slate-200 overflow-hidden">
+                    <!-- YENİ: flex-shrink-0 eklendi -->
+                    <a href="#" class="flex-shrink-0">
+                        <!-- GÜNCELLENDİ: Bu BÜYÜK logodur. Menü kapalıyken 'hidden' (gizli) olur. -->
+                        <img src="logo_son-removebg-preview.png" alt="Logo" 
+                             class="h-20 w-auto group-[.is-collapsed]:hidden" 
+                             onerror="this.src='https://placehold.co/120x30/3b82f6/ffffff?text=SATICI+LOGO'; this.onerror=null;">
+                        
+                        <!-- YENİ: Bu KÜÇÜK logodur. Varsayılan olarak 'hidden' (gizli) ama menü kapalıyken 'block' (görünür) olur. -->
+                        <!-- NOT: "logo-kucuk.png" adında kare bir logo dosyası oluşturup ana klasöre eklemeniz gerekecek. -->
+                        <img src="logo_2-rfytkufjykj.png" alt="Logo Küçük" 
+                             class="h-10 w-12 hidden group-[.is-collapsed]:block" 
+                             onerror="this.src='https://placehold.co/40x40/3b82f6/ffffff?text=M'; this.onerror=null;">
+                    </a>
+                </div>
+
+                <!-- Menü Kapatma Butonu -->
+                <div class="p-4 border-b border-slate-200 group-[.is-collapsed]:hidden">
+                    <button id="menu-toggle-close" class="w-full flex items-center p-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-gray-100 transition-colors">
+                        <svg class="w-6 h-6 mr-2 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" />
+                        </svg>
+                        <span class="font-semibold text-sm">Menüyü Kapat</span>
+                    </button>
+                </div>
+                <!-- Menü Açma Butonu -->
+                <div class="p-4 border-b border-slate-200 hidden group-[.is-collapsed]:block">
+                     <button id="menu-toggle-open" class="w-full flex items-center justify-center p-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-gray-100 transition-colors">
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </button>
+                </div>
+            
+            <!-- SATICI MENÜ ALANI (Anasayfa Aktif) -->
+            <nav class="flex-1 p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="#" class="flex items-center px-4 py-3 text-sm font-semibold rounded-lg sidebar-active group-[.is-collapsed]:justify-center">
+                            <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25A2.25 2.25 0 0113.5 8.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
+                            <span class="ml-3 group-[.is-collapsed]:hidden">Anasayfa</span>
+                        </a>
+                    </li>
+                     <li>
+                        <!-- GÜNCELLENDİ: Gelen Siparişler -->
+                        <a href="işletme_siparis.html" class="flex items-center px-4 py-3 text-sm font-semibold text-slate-700 rounded-lg sidebar-link group-[.is-collapsed]:justify-center">
+                            <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                            <span class="ml-3 group-[.is-collapsed]:hidden">Gelen Siparişler</span>
+                        </a>
+                    </li>
+                    <li>
+                        <!-- YENİ: Ürünlerim -->
+                        <a href="ürünler_deneme.html" class="flex items-center px-4 py-3 text-sm font-semibold text-slate-700 rounded-lg sidebar-link group-[.is-collapsed]:justify-center">
+                           <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10.5 11.25h3M12 15h.008" /><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 7.5h16.5v-1.5a1.5 1.5 0 00-1.5-1.5h-13.5a1.5 1.5 0 00-1.5 1.5v1.5z" /></svg>
+                            <span class="ml-3 group-[.is-collapsed]:hidden">Ürünlerim</span>
+                        </a>
+                    </li>
+                     <li>
+                        <!-- YENİ: Müşteriler -->
+                        <a href="#" class="flex items-center px-4 py-3 text-sm font-semibold text-slate-700 rounded-lg sidebar-link group-[.is-collapsed]:justify-center">
+                            <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.003c0 1.113.285 2.16.786 3.07M15 19.128H12.75l-.614 1.769A.91.91 0 0110.69 22.5l-2.81-5.186c-.54-.988-1.658-1.62-2.844-1.62H4.5a2.25 2.25 0 01-2.25-2.25v-6a2.25 2.25 0 012.25-2.25h1.5M15 19.128v-3.072M4.5 7.5A2.25 2.25 0 016.75 5.25h10.5A2.25 2.25 0 0119.5 7.5v6a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 13.5v-6z" /></svg>
+                            <span class="ml-3 group-[.is-collapsed]:hidden">Müşteriler</span>
+                        </a>
+                    </li>
+                    <li>
+                        <!-- GÜNCELLENDİ: Satış Raporları -->
+                        <a href="işletme_rapor.html" class="flex items-center px-4 py-3 text-sm font-semibold text-slate-700 rounded-lg sidebar-link group-[.is-collapsed]:justify-center">
+                            <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v18h18M3.75 18.75h16.5M5.25 12.75h3l2.25-4.5 3 6 3-3h3.75" /></svg>
+                            <span class="ml-3 group-[.is-collapsed]:hidden">Satış Raporları</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <nav class="p-4 border-t border-slate-200 mt-auto">
+                 <ul class="space-y-2">
+                    <!-- YENİ: Hakkımızda menü öğesi eklendi -->
+                    <li>
+                        <a href="Marsb_Hakkımızda.html" class="flex items-center px-4 py-3 text-sm font-semibold text-slate-700 rounded-lg sidebar-link group-[.is-collapsed]:justify-center">
+                            <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                            </svg>
+                            <span class="ml-3 group-[.is-collapsed]:hidden">Hakkımızda</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-4 py-3 text-sm font-semibold text-slate-700 rounded-lg sidebar-link group-[.is-collapsed]:justify-center">
+                            <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-1.007 1.113-1.113l.44-.08c.295-.057.6-.057.89 0l.44.08c.542.09.956.514 1.058.985l.02.189a7.15 7.15 0 013.882 3.882l.189.02c.47.102.895.516.985 1.058l.08.44c.057.295.057.6 0 .89l-.08.44c-.09.542-.514.956-.985 1.058l-.189.02a7.15 7.15 0 01-3.882 3.882l-.02.189c-.102.47-.516.895-1.058.985l-.44.08c-.295-.057-.6.057-.89 0l-.44-.08c-.542-.09-1.007-.514-1.113-.985l-.02-.189a7.15 7.15 0 01-3.882-3.882l-.189-.02c-.47-.102-.895-.516-.985-1.058l-.08-.44a1.86 1.86 0 010-.89l.08-.44c.09-.542.514-1.007.985-1.113l.189-.02a7.15 7.15 0 013.882-3.882l.02-.189z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                            <span class="ml-3 group-[.is-collapsed]:hidden">Mağaza Ayarları</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            </div> <!-- sidebar-content div sonu -->
+        </aside>
+
+        <!-- Ana içerik alanı -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header (Sabit) -->
+            <header class="bg-white shadow-sm h-20 flex items-center justify-between px-8 z-50 flex-shrink-0">
+                
+                <!-- Arama Çubuğu -->
+                <div class="flex-1 max-w-xl">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
+                        <!-- GÜNCELLENDİ: Placeholder metni -->
+                        <input type="text" placeholder="Sipariş, ürün veya müşteri ara..." class="w-full bg-slate-100 border-2 border-transparent rounded-full py-2 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition">
+                    </div>
+                </div>
+
+                <!-- Sağ Taraf Aksiyonlar -->
+                <div class="flex items-center space-x-6 ml-6">
+                    <!-- GÜNCELLENDİ: Konum -> Satış Bölgesi -->
+                    <div class="relative" id="location-menu">
+                        <button id="location-button" class="flex items-center space-x-2 text-left">
+                            <!-- GÜNCELLENDİ: İkon ve Renk -->
+                            <svg class="w-6 h-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                            </svg>
+                            <div class="hidden md:block">
+                                <span class="text-sm font-semibold text-gray-700 block">Satış Bölgesi</span>
+                                <span class="text-xs text-gray-500">Tüm Türkiye</span>
+                            </div>
+                        </button>
+                        <!-- Konum Açılır Menü -->
+                        <div id="location-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl p-4 z-20">
+                            <h4 class="font-semibold mb-2">Aktif Bölgelerim</h4>
+                            <ul>
+                                <li><a href="#" class="block px-2 py-1 text-sm hover:bg-slate-100 rounded">Tüm Türkiye</a></li>
+                                <li><a href="#" class="block px-2 py-1 text-sm hover:bg-slate-100 rounded">Marmara Bölgesi</a></li>
+                                <li><a href="#" class="block px-2 py-1 text-sm hover:bg-slate-100 rounded">Ege Bölgesi</a></li>
+                            </ul>
+                            <p class="text-xs text-gray-400 mt-2">Bölge yönetimi için ayarlara gidin.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- KALDIRILDI: Sepet ikonu kaldırıldı. -->
+
+                    <!-- Mesajlar -->
+                    <a href="#" class="relative text-gray-600 hover:text-blue-600 transition">
+                        <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                        </svg>
+                        <span class="absolute -top-1 -right-2 bg-blue-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </a>
+
+                    <!-- Bildirimler (Siparişler için önemli) -->
+                    <a href="#" class="relative text-gray-600 hover:text-blue-600 transition">
+                        <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                        </svg>
+                        <!-- GÜNCELLENDİ: Yeni sipariş bildirimi vurgusu -->
+                        <span class="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">2</span>
+                    </a>
+                    
+                    <!-- Profil Dropdown -->
+                    <div class="relative" id="profile-menu">
+                        <button id="profile-button" class="flex items-center space-x-2 text-sm font-semibold text-gray-700 hover:text-blue-600 transition">
+                            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span class="hidden md:inline">Hesabım</span>
+                        </button>
+                        <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl py-2 z-20">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-100">Mağaza Ayarları</a>
+                            <a href="Marsb_destek.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-100">Destek</a>
+                            <div class="border-t my-1"></div>
+                             <a href="#" data-logout class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">Çıkış Yap</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- İçerik (Kaydırılabilir) -->
+            <main class="flex-1 overflow-y-auto bg-white">
+                
+                <!-- KALDIRILDI: Brands Section (Logo Marquee) kaldırıldı. -->
+                
+                <!-- GÜNCELLENDİ: Hero Section (Satıcı Odaklı) -->
+                <section class="bg-gradient-to-r from-green-400 to-blue-500 text-white">
+                    <div class="container mx-auto px-4 py-16 text-center">
+                        <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Ürünlerinizi Binlerce İşletmeye Ulaştırın</h1>
+                        <p class="text-lg md:text-xl max-w-2xl mx-auto">Tedarik ağınızı genişletin, siparişlerinizi tek panelden kolayca yönetin.</p>
+                    </div>
+                </section>
+                
+                <div class="container mx-auto px-4 py-8">
+                    
+                    <!-- YENİ: Satıcı İstatistik Kartları -->
+                    <section class="py-8">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6">Mağaza Özeti</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            
+                            <!-- Kart 1: Gelen Siparişler -->
+                            <div class="stat-card bg-white rounded-lg shadow-lg p-6 flex items-center space-x-4">
+                                <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                                </div>
+                                <div>
+                                    <span class="text-sm text-gray-500">Yeni Sipariş</span>
+                                    <p class="text-2xl font-bold text-gray-900">12</p>
+                                </div>
+                            </div>
+
+                            <!-- Kart 2: Günlük Ciro -->
+                            <div class="stat-card bg-white rounded-lg shadow-lg p-6 flex items-center space-x-4">
+                                <div class="p-3 rounded-full bg-green-100 text-green-600">
+                                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0l.879-.659M12 6l-3.879-2.91a.902.902 0 01-1.15.257l-2.258.948c-.887.372-1.6.958-2.063 1.708a6.3 6.3 0 00-.376 2.846C2.98 13.29 8.25 18 12 18c3.75 0 9.02-4.71 8.497-8.388a6.3 6.3 0 00-.376-2.846c-.463-.75-1.176-1.336-2.063-1.708l-2.258-.948a.902.902 0 01-1.15-.257L12 6z" /></svg>
+                                </div>
+                                <div>
+                                    <span class="text-sm text-gray-500">Günlük Ciro</span>
+                                    <p class="text-2xl font-bold text-gray-900">8.450 ₺</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Kart 3: Yeni Müşteriler -->
+                            <div class="stat-card bg-white rounded-lg shadow-lg p-6 flex items-center space-x-4">
+                                <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125c0-1.02.83-1.85 1.85-1.85h.75c1.02 0 1.85.83 1.85 1.85v.01M6 11.25a2.25 2.25 0 012.25-2.25h3c1.02 0 1.85.83 1.85 1.85v.01M6 11.25v-1.5c0-1.02.83-1.85 1.85-1.85h.75c1.02 0 1.85.83 1.85 1.85v.01M6 11.25v1.5c0 1.02.83-1.85 1.85-1.85h.75c1.02 0 1.85.83 1.85 1.85v.01M6 11.25h3m-3.5 6A2.25 2.25 0 014.25 15h.5a2.25 2.25 0 012.25 2.25v.01M11.25 17.25v-.01M11.25 17.25a2.25 2.25 0 012.25-2.25h.5a2.25 2.25 0 012.25 2.25v.01M11.25 17.25v-1.5c0-1.02.83-1.85 1.85-1.85h.75c1.02 0 1.85.83 1.85 1.85v.01" /></svg>
+                                </div>
+                                <div>
+                                    <span class="text-sm text-gray-500">Yeni Müşteri (Bu Ay)</span>
+                                    <p class="text-2xl font-bold text-gray-900">4</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Kart 4: Mesajlar -->
+                            <div class="stat-card bg-white rounded-lg shadow-lg p-6 flex items-center space-x-4">
+                                <div class="p-3 rounded-full bg-red-100 text-red-600">
+                                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>
+                                </div>
+                                <div>
+                                    <span class="text-sm text-gray-500">Okunmamış Mesaj</span>
+                                    <p class="text-2xl font-bold text-gray-900">3</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- GÜNCELLENDİ: "En Çok Satan Ürünleriniz" Section -->
+                    <section class="py-8">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6">En Çok Satan Ürünleriniz</h2>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                            <div class="bg-white rounded-lg shadow-lg overflow-hidden group transition-transform transform hover:-translate-y-1">
+                                <div class="relative"><img src="https://placehold.co/300x200/F1F5F9/475569?text=Ürün+Görseli+1" alt="Ürün 1" class="w-full h-40 object-cover"></div>
+                                <div class="p-4">
+                                    <h3 class="font-semibold text-gray-800">Kendi Ürününüz 1</h3>
+                                    <p class="text-sm text-gray-500">Açıklama / Kategori</p>
+                                    <a href="#" class="mt-4 w-full block text-center bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold py-2 rounded-lg hover:from-green-600 hover:to-green-700 transition shadow-md hover:shadow-lg">Detay Gör</a>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-lg overflow-hidden group transition-transform transform hover:-translate-y-1">
+                                <div class="relative"><img src="https://placehold.co/300x200/F1F5F9/475569?text=Ürün+Görseli+2" alt="Ürün 2" class="w-full h-40 object-cover"></div>
+                                <div class="p-4">
+                                    <h3 class="font-semibold text-gray-800">Kendi Ürününüz 2</h3>
+                                    <p class="text-sm text-gray-500">Açıklama / Kategori</p>
+                                    <a href="#" class="mt-4 w-full block text-center bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold py-2 rounded-lg hover:from-green-600 hover:to-green-700 transition shadow-md hover:shadow-lg">Detay Gör</a>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-lg overflow-hidden group transition-transform transform hover:-translate-y-1">
+                                <div class="relative"><img src="https://placehold.co/300x200/F1F5F9/475569?text=Ürün+Görseli+3" alt="Ürün 3" class="w-full h-40 object-cover"></div>
+                                <div class="p-4">
+                                    <h3 class="font-semibold text-gray-800">Kendi Ürününüz 3</h3>
+                                    <p class="text-sm text-gray-500">Açıklama / Kategori</p>
+                                    <a href="#" class="mt-4 w-full block text-center bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold py-2 rounded-lg hover:from-green-600 hover:to-green-700 transition shadow-md hover:shadow-lg">Detay Gör</a>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-lg shadow-lg overflow-hidden group transition-transform transform hover:-translate-y-1">
+                                <div class="relative"><img src="https://placehold.co/300x200/F1F5F9/475569?text=Ürün+Görseli+4" alt="Ürün 4" class="w-full h-40 object-cover"></div>
+                                <div class="p-4">
+                                    <h3 class="font-semibold text-gray-800">Kendi Ürününüz 4</h3>
+                                    <p class="text-sm text-gray-500">Açıklama / Kategori</p>
+                                    <a href="#" class="mt-4 w-full block text-center bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold py-2 rounded-lg hover:from-green-600 hover:to-green-700 transition shadow-md hover:shadow-lg">Detay Gör</a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                
+                <!-- KALDIRILDI: About Us Section (Vizyon/Misyon) kaldırıldı -->
+                
+                <!-- Footer (Aynen korundu) -->
+                <footer class="bg-slate-800 text-slate-300"> 
+                    <div class="container mx-auto px-12 py-12">
+                        <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
+                            <div>
+                                <h4 class="text-lg font-semibold text-white mb-4">MaRSB</h4>
+                                <p class="text-sm">Tedarik zincirinizi dijitalleştirerek işletmenizi bir adım öne taşıyın.</p>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-white mb-4">Hızlı Erişim</h4>
+                                <ul>
+                                    <li><a href="#" class="hover:text-white transition">Hakkımızda</a></li>
+                                    <li><a href="#" class="hover:text-white transition">Satıcı Ol</a></li>
+                                    <li><a href="#" class="hover:text-white transition">Giriş Yap</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-white mb-4">İletim</h4>
+                                <ul class="space-y-2 text-sm">
+                                    <li class="flex items-center justify-center md:justify-start">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                        Örnek Mah. Örnek Sk. No:123, Örnek/İL
+                                    </li>
+                                    <li class="flex items-center justify-center md:justify-start">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                        +90 555 123 45 67
+                                    </li>
+                                    <li class="flex items-center justify-center md:justify-start">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                        info@marsb.com
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="border-t border-slate-700 mt-8 pt-6 text-center text-sm">
+                            <p>&copy; 2024 MaRSB. Tüm hakları saklıdır.</p>
+                        </div>
+                    </div>
+                </footer>
+
+            </main>
+        </div>
+    </div>
+    
+    <!-- Gerekli Javascript kodları (Dropdownlar ve Sidebar için) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Konum Menüsü
+            const locationButton = document.getElementById('location-button');
+            const locationDropdown = document.getElementById('location-dropdown');
+            const locationMenu = document.getElementById('location-menu');
+
+            if (locationButton && locationDropdown && locationMenu) {
+                locationButton.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    locationDropdown.classList.toggle('hidden');
+                });
+                document.addEventListener('click', function (event) {
+                    if (!locationMenu.contains(event.target)) {
+                        locationDropdown.classList.add('hidden');
+                    }
+                });
+            } else {
+                console.error("Hata: Lokasyon menüsü için gerekli HTML elementleri bulunamadı.");
+            }
+
+            // Profil Menüsü
+            const profileButton = document.getElementById('profile-button');
+            const profileDropdown = document.getElementById('profile-dropdown');
+            const profileMenu = document.getElementById('profile-menu');
+
+            if (profileButton && profileDropdown && profileMenu) {
+                profileButton.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    profileDropdown.classList.toggle('hidden');
+                });
+                document.addEventListener('click', function (event) {
+                    if (!profileMenu.contains(event.target)) {
+                        profileDropdown.classList.add('hidden');
+                    }
+                });
+            } else {
+                console.error("Hata: Profil menüsü için gerekli HTML elementleri bulunamadı.");
+            }
+
+            // Sidebar Toggle Script
+            const toggleClose = document.getElementById('menu-toggle-close');
+            const toggleOpen = document.getElementById('menu-toggle-open');
+            const sidebar = document.getElementById('sidebar');
+
+            function toggleMenu() {
+                sidebar.classList.toggle('w-64'); // Geniş (default)
+                sidebar.classList.toggle('w-20'); // Dar (5rem)
+                sidebar.classList.toggle('is-collapsed'); // Tailwind 'group' için yardımcı class
+            }
+
+            if (toggleClose && toggleOpen && sidebar) {
+                toggleClose.addEventListener('click', toggleMenu);
+                toggleOpen.addEventListener('click', toggleMenu);
+            } else {
+                console.error("Hata: Sidebar toggle için gerekli HTML elementleri bulunamadı.");
+            }
+        });
+
+        // Auth yönetimi - İşletme sayfası için
+        const auth = new AuthManager('isletme');
+    </script>
+</body>
+</html>
+

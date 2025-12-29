@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaRSB - Satıcı Raporlar</title>
+    
+    <!-- YENİ: Favicon (Sekme Logosu) eklendi -->
+    <link rel="icon" href="logo_2-rfytkufjykj.png" type="image/png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../scripts/auth-manager.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        
+        /* Sidebar Stilleri */
+        .sidebar-active {
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .sidebar-link {
+             transition: all 0.2s ease-in-out;
+        }
+        .sidebar-link:hover {
+            background-color: #e2e8f0; /* slate-200 */
+            transform: translateX(4px);
+        }
+    </style>
+</head>
+<body class="bg-slate-100">
+
+    <!-- Ana sarmalayıcı - GÜNCELLENDİ: h-screen eklendi -->
+    <div class="flex h-screen">
+        
+        <!-- Sidebar (Sol Menü) - GÜNCELLENDİ: Sticky kaldırıldı, 'group' ve 'id' eklendi -->
+        <aside id="sidebar" class="w-64 bg-white shadow-lg flex flex-col transition-all duration-300 ease-in-out group">
+            <!-- YENİ: sidebar-content sarmalayıcı eklendi -->
+            <div id="sidebar-content" class="flex flex-col flex-1 min-h-0">
+            
+                <!-- Logo Alanı - GÜNCELLENDİ: Çift logo sistemi eklendi -->
+                <div class="flex items-center justify-start px-4 group-[.is-collapsed]:justify-center group-[.is-collapsed]:px-2 h-20 border-b border-slate-200 overflow-hidden">
+                    <a href="#" class="flex-shrink-0">
+                        <!-- BÜYÜK Logo -->
+                        <img src="logo_son-removebg-preview.png" alt="Logo" 
+                             class="h-20 w-auto group-[.is-collapsed]:hidden" 
+                             onerror="this.src='https://placehold.co/120x30/3b82f6/ffffff?text=SATICI+LOGO'; this.onerror=null;">
+                        <!-- KÜÇÜK Logo -->
+                        <img src="logo_2-rfytkufjykj.png" alt="Logo Küçük" 
+                             class="h-10 w-12 hidden group-[.is-collapsed]:block" 
+                             onerror="this.src='https://placehold.co/40x40/3b82f6/ffffff?text=M'; this.onerror=null;">
+                    </a>
+                </div>
+                
+                <!-- YENİ: Menü Kapatma Butonu -->
+                <div class="p-4 border-b border-slate-200 group-[.is-collapsed]:hidden">
+                    <button id="menu-toggle-close" class="w-full flex items-center p-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-gray-100 transition-colors">
+                        <svg class="w-6 h-6 mr-2 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" />
+                        </svg>
+                        <span class="font-semibold text-sm">Menüyü Kapat</span>
+                    </button>
+                </div>
+                <!-- YENİ: Menü Açma Butonu -->
+                <div class="p-4 border-b border-slate-200 hidden group-[.is-collapsed]:block">
+                     <button id="menu-toggle-open" class="w-full flex items-center justify-center p-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-gray-100 transition-colors">
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </button>
+                </div>
+            
+            <!-- Menü Alanı (Satıcı Menüsü - Raporlar Aktif) - GÜNCELLENDİ: Menü linkleri anasayfa ile eşitlendi -->
+            <nav class="flex-1 p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <!-- Anasayfa (İnaktif) -->
+                        <a href="isletme_ana.html" class="flex items-center px-4 py-3 text-sm font-semibold text-slate-700 rounded-lg sidebar-link group-[.is-collapsed]:justify-center">
+                            <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25A2.25 2.25 0 0113.5 8.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
+                            <span class="ml-3 group-[.is-collapsed]:hidden">Anasayfa</span>
+                        </a>
+                    </li>
+                     <li>
+                        <!-- Gelen Siparişler -->
+                        <a href="işletme_siparis.html" class="flex items-center px-4 py-3 text-sm font-semibold text-slate-700 rounded-lg sidebar-link group-[.is-collapsed]:justify-center">
+                            <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                            <span class="ml-3 group-[.is-collapsed]:hidden">Gelen Siparişler</span>
+                        </a>
+                    </li>
+                    <li>
+                        <!-- Ürünlerim -->
+                        <a href="ürünler_deneme.html" class="flex items-center px-4 py-3 text-sm font-semibold text-slate-700 rounded-lg sidebar-link group-[.is-collapsed]:justify-center">
+                           <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10.5 11.25h3M12 15h.008" /><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 7.5h16.5v-1.5a1.5 1.5 0 00-1.5-1.5h-13.5a1.5 1.5 0 00-1.5 1.5v1.5z" /></svg>
+                            <span class="ml-3 group-[.is-collapsed]:hidden">Ürünlerim</span>
+                        </a>
+                    </li>
+                     <li>
+                        <!-- Müşteriler -->
+                        <a href="#" class="flex items-center px-4 py-3 text-sm font-semibold text-slate-700 rounded-lg sidebar-link group-[.is-collapsed]:justify-center">
+                            <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.003c0 1.113.285 2.16.786 3.07M15 19.128H12.75l-.614 1.769A.91.91 0 0110.69 22.5l-2.81-5.186c-.54-.988-1.658-1.62-2.844-1.62H4.5a2.25 2.25 0 01-2.25-2.25v-6a2.25 2.25 0 012.25-2.25h1.5M15 19.128v-3.072M4.5 7.5A2.25 2.25 0 016.75 5.25h10.5A2.25 2.25 0 0119.5 7.5v6a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 13.5v-6z" /></svg>
+                            <span class="ml-3 group-[.is-collapsed]:hidden">Müşteriler</span>
+                        </a>
+                    </li>
+                    <li>
+                        <!-- Raporlar (Aktif) -->
+                        <a href="işletme_rapor.html" class="flex items-center px-4 py-3 text-sm font-semibold rounded-lg sidebar-active group-[.is-collapsed]:justify-center">
+                            <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v18h18M3.75 18.75h16.5M5.25 12.75h3l2.25-4.5 3 6 3-3h3.75" /></svg>
+                            <span class="ml-3 group-[.is-collapsed]:hidden">Satış Raporları</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <!-- Alt Menü (Ayarlar) - mt-auto ile en alta sabitlendi -->
+            <nav class="p-4 border-t border-slate-200 mt-auto">
+                 <ul class="space-y-2">
+                    <!-- YENİ: Hakkımızda eklendi -->
+                    <li>
+                        <a href="Marsb_Hakkımızda.html" class="flex items-center px-4 py-3 text-sm font-semibold text-slate-700 rounded-lg sidebar-link group-[.is-collapsed]:justify-center">
+                            <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                            </svg>
+                            <span class="ml-3 group-[.is-collapsed]:hidden">Hakkımızda</span>
+                        </a>
+                    </li>
+                    <li>
+                        <!-- GÜNCELLENDİ: Mağaza Ayarları olarak değişti -->
+                        <a href="#" class="flex items-center px-4 py-3 text-sm font-semibold text-slate-700 rounded-lg sidebar-link group-[.is-collapsed]:justify-center">
+                            <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-1.007 1.113-1.113l.44-.08c.295-.057.6-.057.89 0l.44.08c.542.09.956.514 1.058.985l.02.189a7.15 7.15 0 013.882 3.882l.189.02c.47.102.895.516.985 1.058l.08.44c.057.295.057.6 0 .89l-.08.44c-.09.542-.514.956-.985 1.058l-.189.02a7.15 7.15 0 01-3.882 3.882l-.02.189c-.102.47-.516.895-1.058.985l-.44.08c-.295-.057-.6.057-.89 0l-.44-.08c-.542-.09-1.007-.514-1.113-.985l-.02-.189a7.15 7.15 0 01-3.882-3.882l-.189-.02c-.47-.102-.895-.516-.985-1.058l-.08-.44a1.86 1.86 0 010-.89l.08-.44c.09-.542.514-1.007.985-1.113l.189-.02a7.15 7.15 0 013.882-3.882l.02-.189z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                            <span class="ml-3 group-[.is-collapsed]:hidden">Mağaza Ayarları</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            </div> <!-- sidebar-content div sonu -->
+        </aside>
+
+        <!-- Ana İçerik Alanı (Kaydırılabilir) - GÜNCELLENDİ: overflow-hidden eklendi -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header (Sticky kaldırıldı) - GÜNCELLENDİ: flex-shrink-0 eklendi -->
+            <header class="bg-white shadow-sm h-20 flex items-center justify-between px-8 z-50 flex-shrink-0">
+                <!-- Arama Çubuğu -->
+                <div class="flex-1 max-w-xl">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
+                        <input type="text" placeholder="Sipariş, ürün veya müşteri ara..." class="w-full bg-slate-100 border-2 border-transparent rounded-full py-2 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition">
+                    </div>
+                </div>
+
+                <!-- Sağ Taraf Aksiyonlar (Satıcı) -->
+                <div class="flex items-center space-x-6 ml-6">
+                    
+                    <!-- YENİ: Satış Bölgesi Dropdown eklendi -->
+                    <div class="relative" id="location-menu">
+                        <button id="location-button" class="flex items-center space-x-2 text-left">
+                            <svg class="w-6 h-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                            </svg>
+                            <div class="hidden md:block">
+                                <span class="text-sm font-semibold text-gray-700 block">Satış Bölgesi</span>
+                                <span class="text-xs text-gray-500">Tüm Türkiye</span>
+                            </div>
+                        </button>
+                        <div id="location-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl p-4 z-20">
+                            <h4 class="font-semibold mb-2">Aktif Bölgelerim</h4>
+                            <ul>
+                                <li><a href="#" class="block px-2 py-1 text-sm hover:bg-slate-100 rounded">Tüm Türkiye</a></li>
+                                <li><a href="#" class="block px-2 py-1 text-sm hover:bg-slate-100 rounded">Marmara Bölgesi</a></li>
+                                <li><a href="#" class="block px-2 py-1 text-sm hover:bg-slate-100 rounded">Ege Bölgesi</a></li>
+                            </ul>
+                            <p class="text-xs text-gray-400 mt-2">Bölge yönetimi için ayarlara gidin.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Mesajlar -->
+                    <a href="#" class="relative text-gray-600 hover:text-blue-600 transition">
+                        <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                        </svg>
+                        <span class="absolute -top-1 -right-2 bg-blue-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </a>
+
+                    <!-- Bildirimler -->
+                    <a href="#" class="relative text-gray-600 hover:text-blue-600 transition">
+                        <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                        </svg>
+                        <span class="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">2</span>
+                    </a>
+                    
+                    <!-- Profil Dropdown (Satıcı yazısı kaldırıldı) -->
+                    <!-- GÜNCELLENDİ: Dropdown JS ile kontrol edilecek şekilde (id'ler eklendi, group-hover kaldırıldı) -->
+                    <div class="relative" id="profile-menu">
+                        <button id="profile-button" class="flex items-center space-x-2 text-sm font-semibold text-gray-700 hover:text-blue-600 transition">
+                            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span class="hidden md:inline">Hesabım</span>
+                        </button>
+                        <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl py-2 z-20">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-100">Mağaza Ayarları</a>
+                            <a href="Marsb_destek.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-100">Destek</a>
+                            <div class="border-t my-1"></div>
+                             <a href="#" data-logout class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">Çıkış Yap</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Ana İçerik (Kaydırılabilir) - GÜNCELLENDİ: flex-1 ve overflow-y-auto eklendi -->
+            <main class="flex-1 overflow-y-auto p-8 bg-slate-100">
+                
+                <!-- Dashboard Başlığı (Genelleştirildi) -->
+                <section class="mb-8">
+                    <div class="flex flex-col md:flex-row justify-between items-center">
+                        <div>
+                            <!-- GÜNCELLENDİ: Başlık Raporlar sayfası için uyarlandı -->
+                            <h1 class="text-3xl font-bold text-gray-800">Satış Raporları</h1>
+                            <p class="text-gray-500 mt-1">İşletmenizin detaylı satış analizleri.</p>
+                        </div>
+                        <div class="flex items-center space-x-2 mt-4 md:mt-0">
+                            <a href="#" id="ai-scroll" class="px-4 py-2 text-sm font-semibold text-gray-700 bg-white border rounded-full hover:bg-slate-100 transition">Yapay Zeka Raporları</a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Yapay Zeka Raporları -->
+                <section id="ai-insights-section" class="mb-8">
+                    <div class="bg-white rounded-xl shadow-md p-6 space-y-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-800">Yapay Zeka Raporları</h2>
+                                <p class="text-sm text-gray-500 mt-1">Uygulamadaki ürün verileriniz analiz edilerek özet kartlar ve öneriler üretilir.</p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <button id="ai-refresh" class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
+                                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992V4.355m-18 11.314v4.993h4.992" /><path stroke-linecap="round" stroke-linejoin="round" d="M20.26 12.006c-.48 4.003-3.87 7.119-7.96 7.119-1.84 0-3.54-.632-4.894-1.69m-3.666-3.64c-.502-4.003 2.888-7.119 6.978-7.119 1.84 0 3.54.632 4.894 1.69" /></svg>
+                                    Yenile
+                                </button>
+                                <span id="ai-updated" class="text-xs text-gray-500"></span>
+                            </div>
+                        </div>
+
+                        <div id="ai-loading" class="flex items-center gap-2 text-sm text-gray-600 bg-slate-50 border border-dashed border-slate-200 rounded-lg p-4">
+                            <svg class="w-4 h-4 animate-spin text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4l-3 3 3 3H4a8 8 0 01-8-8z"></path>
+                            </svg>
+                            Yapay zeka raporları hazırlanıyor...
+                        </div>
+
+                        <div id="ai-error" class="hidden bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 text-sm">
+                            Raporlar yüklenemedi. Lütfen tekrar deneyin.
+                            <button id="ai-retry" class="ml-2 font-semibold underline">Tekrar dene</button>
+                        </div>
+
+                        <div id="ai-content" class="hidden space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                <div class="bg-slate-50 rounded-lg p-4">
+                                    <p class="text-sm text-gray-500">Ürün Sayısı</p>
+                                    <p id="ai-total-products" class="text-2xl font-bold text-gray-900 mt-1">-</p>
+                                </div>
+                                <div class="bg-slate-50 rounded-lg p-4">
+                                    <p class="text-sm text-gray-500">Toplam Stok</p>
+                                    <p id="ai-total-stock" class="text-2xl font-bold text-gray-900 mt-1">-</p>
+                                </div>
+                                <div class="bg-slate-50 rounded-lg p-4">
+                                    <p class="text-sm text-gray-500">Stok Değeri (tahmini)</p>
+                                    <p id="ai-total-value" class="text-2xl font-bold text-gray-900 mt-1">-</p>
+                                </div>
+                                <div class="bg-slate-50 rounded-lg p-4">
+                                    <p class="text-sm text-gray-500">Ortalama Marj</p>
+                                    <p id="ai-avg-margin" class="text-2xl font-bold text-gray-900 mt-1">-</p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                                <div class="lg:col-span-2 bg-slate-50 rounded-lg p-4">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-800">Kategori Dağılımı</h3>
+                                        <span class="text-xs text-gray-500">Ürün sayısına göre</span>
+                                    </div>
+                                    <div id="ai-category-list" class="space-y-3"></div>
+                                </div>
+
+                                <div class="bg-slate-50 rounded-lg p-4">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-800">Kritik Stok</h3>
+                                        <span class="text-xs text-gray-500">≤ 5 adet</span>
+                                    </div>
+                                    <div id="ai-low-stock" class="space-y-2 text-sm text-gray-700"></div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-50 rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="text-lg font-semibold text-gray-800">Yapay Zeka Önerileri</h3>
+                                    <span class="text-xs text-gray-500">Anlık analiz</span>
+                                </div>
+                                <ul id="ai-recommendations" class="space-y-2 text-sm text-gray-700 list-disc list-inside"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- İstatistik Kartları -->
+                <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h4 class="text-sm font-semibold text-gray-500">Bekleyen Sipariş</h4>
+                        <p class="text-3xl font-extrabold text-blue-600 mt-1">12</p>
+                        <p class="text-xs text-gray-400 mt-1">+2 yeni sipariş</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h4 class="text-sm font-semibold text-gray-500">Tamamlanan Sipariş</h4>
+                        <p class="text-3xl font-extrabold text-green-600 mt-1">84</p>
+                        <p class="text-xs text-gray-400 mt-1">Son 24 saatte</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h4 class="text-sm font-semibold text-gray-500">Günlük Ciro</h4>
+                        <p class="text-3xl font-extrabold text-gray-800 mt-1">₺14,250</p>
+                        <p class="text-xs text-green-500 mt-1">+%8.2 artış</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h4 class="text-sm font-semibold text-gray-500">Yeni Mesaj</h4>
+                        <p class="text-3xl font-extrabold text-red-500 mt-1">3</p>
+                        <p class="text-xs text-gray-400 mt-1">Bayilerden gelen</p>
+                    </div>
+                </section>
+
+                <!-- Son Siparişler ve Popüler Ürünler -->
+                <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Son Siparişler Tablosu -->
+                    <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Son Siparişler (Gelen)</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead class="text-left text-gray-500">
+                                    <tr>
+                                        <th class="p-3 font-semibold">Bayi</th>
+                                        <th class="p-3 font-semibold">Tarih</th>
+                                        <th class="p-3 font-semibold">Tutar</th>
+                                        <th class="p-3 font-semibold">Durum</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-t hover:bg-slate-50">
+                                        <td class="p-3 font-semibold text-gray-700">Can Market</td>
+                                        <td class="p-3 text-gray-600">09.10.2025</td>
+                                        <td class="p-3 text-gray-600">₺2,150.75</td>
+                                        <td class="p-3"><span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Teslim Edildi</span></td>
+                                    </tr>
+                                    <tr class="border-t hover:bg-slate-50">
+                                        <td class="p-3 font-semibold text-gray-700">Yıldız Gıda</td>
+                                        <td class="p-3 text-gray-600">09.10.2025</td>
+                                        <td class="p-3 text-gray-600">₺1,840.00</td>
+                                        <td class="p-3"><span class="px-2 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full">Yola Çıktı</span></td>
+                                    </tr>
+                                    <tr class="border-t hover:bg-slate-50">
+                                        <td class="p-3 font-semibold text-gray-700">Lezzet Büfe</td>
+                                        <td class="p-3 text-gray-600">08.10.2025</td>
+                                        <td class="p-3 text-gray-600">₺980.50</td>
+                                        <td class="p-3"><span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full">Hazırlanıyor</span></td>
+                                    </tr>
+                                    <tr class="border-t hover:bg-slate-50">
+                                        <td class="p-3 font-semibold text-gray-700">Paşa Fırın</td>
+                                        <td class="p-3 text-gray-600">08.10.2025</td>
+                                        <td class="p-3 text-gray-600">₺3,400.00</td>
+                                        <td class="p-3"><span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Teslim Edildi</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Popüler Ürünler (Genelleştirildi) -->
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Popüler Ürünler</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <img src="https://placehold.co/64x64/F1F5F9/475569?text=Süt+1L" alt="Product" class="w-16 h-16 rounded-lg object-cover">
+                                <div class="ml-4">
+                                    <p class="font-semibold text-gray-800">Süt 1L (Tam Yağlı)</p>
+                                    <p class="text-sm text-gray-500">1200 adet satıldı</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <img src="https://placehold.co/64x64/F1F5F9/475569?text=Ayran" alt="Product" class="w-16 h-16 rounded-lg object-cover">
+                                <div class="ml-4">
+                                    <p class="font-semibold text-gray-800">Ayran 300ml</p>
+                                    <p class="text-sm text-gray-500">950 adet satıldı</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <img src="https://placehold.co/64x64/F1F5F9/475569?text=Yoğurt" alt="Product" class="w-16 h-16 rounded-lg object-cover">
+                                <div class="ml-4">
+                                    <p class="font-semibold text-gray-800">Kaymaksız Yoğurt</p>
+                                    <p class="text-sm text-gray-500">780 adet satıldı</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Sık Sipariş Veren Müşteriler (Örnek Liste) -->
+                <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800">Sık Sipariş Verenler</h3>
+                                <p class="text-sm text-gray-500">Örnek müşteri listesi</p>
+                            </div>
+                            <span class="text-xs font-semibold px-2 py-1 rounded-full bg-blue-100 text-blue-700">Top 6</span>
+                        </div>
+                        <ul class="space-y-3 text-sm text-gray-800">
+                            <li class="flex items-center justify-between">
+                                <span class="font-semibold">Can Market</span>
+                                <span class="text-gray-500">38 sipariş</span>
+                            </li>
+                            <li class="flex items-center justify-between">
+                                <span class="font-semibold">Yıldız Gıda</span>
+                                <span class="text-gray-500">29 sipariş</span>
+                            </li>
+                            <li class="flex items-center justify-between">
+                                <span class="font-semibold">Lezzet Büfe</span>
+                                <span class="text-gray-500">24 sipariş</span>
+                            </li>
+                            <li class="flex items-center justify-between">
+                                <span class="font-semibold">Paşa Fırın</span>
+                                <span class="text-gray-500">21 sipariş</span>
+                            </li>
+                            <li class="flex items-center justify-between">
+                                <span class="font-semibold">Simit Dünyası</span>
+                                <span class="text-gray-500">18 sipariş</span>
+                            </li>
+                            <li class="flex items-center justify-between">
+                                <span class="font-semibold">Ada Pastanesi</span>
+                                <span class="text-gray-500">16 sipariş</span>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Footer (Sayfanın en altı) -->
+                <!-- Negatif marginler ana sarmalayıcının padding'ini (p-8) dengelemek için -->
+                <footer class="bg-slate-800 text-slate-300 -mx-8 -mb-8 mt-8"> 
+                    <div class="container mx-auto px-12 py-12">
+                        
+                        <!-- KALDIRILDI: Misyon/Vizyon kaldırıldı -->
+                        <!-- KALDIRILDI: Ayırıcı kaldırıldı --> 
+
+                        <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
+                            <div>
+                                <h4 class="text-lg font-semibold text-white mb-4">MaRSB</h4>
+                                <p class="text-sm">Tedarik zincirinizi dijitalleştirerek işletmenizi bir adım öne taşıyın.</p>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-white mb-4">Hızlı Erişim</h4>
+                                <ul>
+                                    <li><a href="#" class="hover:text-white transition">Hakkımızda</a></li>
+                                    <li><a href="#" class="hover:text-white transition">Kayıt Ol</a></li>
+                                    <li><a href="#" class="hover:text-white transition">Giriş Yap</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-white mb-4">İletişim</h4>
+                                <ul class="space-y-2 text-sm">
+                                    <li class="flex items-center justify-center md:justify-start">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                        Örnek Mah. Örnek Sk. No:123, Örnek/İL
+                                    </li>
+                                    <li class="flex items-center justify-center md:justify-start">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                        +90 555 123 45 67
+                                    </li>
+                                    <li class="flex items-center justify-center md:justify-start">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                        info@marsb.com
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="border-t border-slate-700 mt-8 pt-6 text-center text-sm">
+                            <p>&copy; 2024 MaRSB. Tüm hakları saklıdır.</p>
+                        </div>
+                    </div>
+                </footer>
+            </main>
+        </div>
+    </div>
+    
+    <!-- YENİ: Gerekli Javascript kodları (Dropdownlar ve Sidebar için) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Konum Menüsü
+            const locationButton = document.getElementById('location-button');
+            const locationDropdown = document.getElementById('location-dropdown');
+            const locationMenu = document.getElementById('location-menu');
+
+            if (locationButton && locationDropdown && locationMenu) {
+                locationButton.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    locationDropdown.classList.toggle('hidden');
+                });
+                document.addEventListener('click', function (event) {
+                    if (!locationMenu.contains(event.target)) {
+                        locationDropdown.classList.add('hidden');
+                    }
+                });
+            } else {
+                console.error("Hata: Lokasyon menüsü için gerekli HTML elementleri bulunamadı.");
+            }
+
+            // Profil Menüsü
+            const profileButton = document.getElementById('profile-button');
+            const profileDropdown = document.getElementById('profile-dropdown');
+            const profileMenu = document.getElementById('profile-menu');
+
+            if (profileButton && profileDropdown && profileMenu) {
+                profileButton.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    profileDropdown.classList.toggle('hidden');
+                });
+                document.addEventListener('click', function (event) {
+                    if (!profileMenu.contains(event.target)) {
+                        profileDropdown.classList.add('hidden');
+                    }
+                });
+            } else {
+                console.error("Hata: Profil menüsü için gerekli HTML elementleri bulunamadı.");
+            }
+
+            // Sidebar Toggle Script
+            const toggleClose = document.getElementById('menu-toggle-close');
+            const toggleOpen = document.getElementById('menu-toggle-open');
+            const sidebar = document.getElementById('sidebar');
+
+            function toggleMenu() {
+                sidebar.classList.toggle('w-64'); // Geniş (default)
+                sidebar.classList.toggle('w-20'); // Dar (5rem)
+                sidebar.classList.toggle('is-collapsed'); // Tailwind 'group' için yardımcı class
+            }
+
+            if (toggleClose && toggleOpen && sidebar) {
+                toggleClose.addEventListener('click', toggleMenu);
+                toggleOpen.addEventListener('click', toggleMenu);
+            } else {
+                console.error("Hata: Sidebar toggle için gerekli HTML elementleri bulunamadı.");
+            }
+
+            // Yapay Zeka Raporları
+            const aiLoading = document.getElementById('ai-loading');
+            const aiError = document.getElementById('ai-error');
+            const aiContent = document.getElementById('ai-content');
+            const aiRefresh = document.getElementById('ai-refresh');
+            const aiRetry = document.getElementById('ai-retry');
+            const aiUpdated = document.getElementById('ai-updated');
+            const aiScroll = document.getElementById('ai-scroll');
+
+            const totalProductsEl = document.getElementById('ai-total-products');
+            const totalStockEl = document.getElementById('ai-total-stock');
+            const totalValueEl = document.getElementById('ai-total-value');
+            const avgMarginEl = document.getElementById('ai-avg-margin');
+            const categoryListEl = document.getElementById('ai-category-list');
+            const lowStockEl = document.getElementById('ai-low-stock');
+            const recommendationsEl = document.getElementById('ai-recommendations');
+
+            const formatCurrency = (value) => new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 0 }).format(Math.round(value || 0));
+
+            function renderCategories(categories) {
+                categoryListEl.innerHTML = '';
+
+                if (!categories || categories.length === 0) {
+                    categoryListEl.innerHTML = '<p class="text-sm text-gray-500">Kategori verisi bulunamadı.</p>';
+                    return;
+                }
+
+                categories.forEach((cat) => {
+                    const barWidth = Math.max(cat.percentage, 6);
+                    const row = document.createElement('div');
+                    row.className = 'space-y-1';
+                    row.innerHTML = `
+                        <div class="flex justify-between text-sm text-gray-700">
+                            <span class="font-semibold">${cat.name}</span>
+                            <span>${cat.count} ürün • ${cat.percentage}%</span>
+                        </div>
+                        <div class="w-full bg-slate-200 rounded-full h-2">
+                            <div class="h-2 rounded-full bg-blue-500" style="width:${barWidth}%"></div>
+                        </div>
+                    `;
+                    categoryListEl.appendChild(row);
+                });
+            }
+
+            function renderLowStock(items) {
+                lowStockEl.innerHTML = '';
+
+                if (!items || items.length === 0) {
+                    lowStockEl.innerHTML = '<p class="text-sm text-gray-500">Kritik stokta ürün yok.</p>';
+                    return;
+                }
+
+                items.forEach((item) => {
+                    const row = document.createElement('div');
+                    row.className = 'flex justify-between items-center bg-white rounded-md px-3 py-2 shadow-sm';
+                    row.innerHTML = `
+                        <div class="text-sm">
+                            <p class="font-semibold text-gray-800">${item.product_name}</p>
+                            <p class="text-xs text-gray-500">${formatCurrency(item.price)}</p>
+                        </div>
+                        <span class="text-xs font-semibold px-2 py-1 rounded-full bg-red-100 text-red-700">${item.stock} adet</span>
+                    `;
+                    lowStockEl.appendChild(row);
+                });
+            }
+
+            function renderRecommendations(recs) {
+                recommendationsEl.innerHTML = '';
+
+                if (!recs || recs.length === 0) {
+                    recommendationsEl.innerHTML = '<li class="text-gray-500">Öneri oluşturulamadı.</li>';
+                    return;
+                }
+
+                recs.forEach((rec) => {
+                    const li = document.createElement('li');
+                    li.textContent = rec;
+                    recommendationsEl.appendChild(li);
+                });
+            }
+
+            function setUpdated(timestamp) {
+                if (!aiUpdated || !timestamp) return;
+                const dt = new Date(timestamp);
+                aiUpdated.textContent = `Güncellendi: ${dt.toLocaleString('tr-TR')}`;
+            }
+
+            async function loadAiInsights() {
+                if (aiLoading) aiLoading.classList.remove('hidden');
+                if (aiError) aiError.classList.add('hidden');
+                if (aiContent) aiContent.classList.add('hidden');
+
+                try {
+                    const response = await fetch('/api/ai-insights', { credentials: 'include' });
+                    if (!response.ok) {
+                        throw new Error('Yüklenemedi');
+                    }
+
+                    const data = await response.json();
+                    if (!data.success) {
+                        throw new Error('API başarısız');
+                    }
+
+                    if (totalProductsEl) totalProductsEl.textContent = data.stats.totalProducts;
+                    if (totalStockEl) totalStockEl.textContent = data.stats.totalStock;
+                    if (totalValueEl) totalValueEl.textContent = formatCurrency(data.stats.totalValue);
+                    if (avgMarginEl) avgMarginEl.textContent = `${data.stats.avgMargin}%`;
+
+                    renderCategories(data.categories);
+                    renderLowStock(data.lowStock);
+                    renderRecommendations(data.recommendations);
+                    setUpdated(data.generatedAt);
+
+                    if (aiContent) aiContent.classList.remove('hidden');
+                } catch (error) {
+                    if (aiError) aiError.classList.remove('hidden');
+                } finally {
+                    if (aiLoading) aiLoading.classList.add('hidden');
+                }
+            }
+
+            if (aiRefresh) {
+                aiRefresh.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loadAiInsights();
+                });
+            }
+
+            if (aiRetry) {
+                aiRetry.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loadAiInsights();
+                });
+            }
+
+            if (aiScroll) {
+                aiScroll.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = document.getElementById('ai-insights-section');
+                    if (section) {
+                        section.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            }
+
+            loadAiInsights();
+        });
+
+        // Auth yönetimi - İşletme sayfası için
+        const auth = new AuthManager('isletme');
+    </script>
+</body>
+</html>

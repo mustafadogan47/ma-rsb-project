@@ -1,0 +1,5 @@
+node_modules/
+marbs.db
+.env
+*.log
+.DS_Store

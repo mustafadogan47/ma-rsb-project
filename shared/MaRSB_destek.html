@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaRSB - Destek</title>
+    
+    <link rel="icon" href="../bayi/logo_2-rfytkufjykj.png" type="image/png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../scripts/auth-manager.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+        }
+        
+        .sidebar-active {
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .sidebar-link {
+             transition: all 0.2s ease-in-out;
+        }
+        .sidebar-link:hover {
+            background-color: #e2e8f0;
+            transform: translateX(4px);
+        }
+        
+        details > summary {
+            list-style: none;
+        }
+        details > summary::before {
+            content: '+';
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+            font-weight: 600;
+            transition: transform 0.2s ease-in-out;
+            display: inline-block;
+        }
+        details[open] > summary::before {
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+<body class="bg-slate-100">
+
+    <div class="flex h-screen">
+        
+        <!-- Sidebar (Sol Menü) -->
+        <aside id="sidebar" class="w-64 bg-white shadow-lg flex flex-col transition-all duration-300 ease-in-out group sticky top-0 h-screen">
+            <div id="sidebar-content" class="flex flex-col flex-1 min-h-0">
+                
+                <!-- Logo Alanı -->
+                <div class="flex items-center justify-start px-4 group-[.is-collapsed]:justify-center group-[.is-collapsed]:px-2 h-20 border-b border-slate-200 overflow-hidden">
+                    <a href="#" id="homeLink" class="flex-shrink-0">
+                        <img src="../bayi/logo_son-removebg-preview.png" alt="Logo" 
+                             class="h-20 w-auto group-[.is-collapsed]:hidden cursor-pointer" 
+                             onerror="this.src='https://placehold.co/120x30/3b82f6/ffffff?text=MARSB'; this.onerror=null;">
+                        <img src="../bayi/logo_2-rfytkufjykj.png" alt="Logo Küçük" 
+                             class="h-10 w-12 hidden group-[.is-collapsed]:block cursor-pointer" 
+                             onerror="this.src='https://placehold.co/40x40/3b82f6/ffffff?text=M'; this.onerror=null;">
+                    </a>
+                </div>
+
+                <!-- Menü Kapatma Butonu -->
+                <div class="p-4 border-b border-slate-200 group-[.is-collapsed]:hidden">
+                    <button id="menu-toggle-close" class="w-full flex items-center p-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-gray-100 transition-colors">
+                        <svg class="w-6 h-6 mr-2 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" />
+                        </svg>
+                        <span class="font-semibold text-sm">Menüyü Kapat</span>
+                    </button>
+                </div>
+                <!-- Menü Açma Butonu -->
+                <div class="p-4 border-b border-slate-200 hidden group-[.is-collapsed]:block">
+                     <button id="menu-toggle-open" class="w-full flex items-center justify-center p-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-gray-100 transition-colors">
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </button>
+                </div>
+            
+                <!-- Menü Alanı (Ortak Menü) -->
+                <nav class="flex-1 p-4 overflow-y-auto">
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="MaRSB_hakkimizda.html" class="flex items-center px-4 py-3 text-sm font-semibold text-slate-700 rounded-lg sidebar-link group-[.is-collapsed]:justify-center">
+                                <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                                </svg>
+                                <span class="ml-3 group-[.is-collapsed]:hidden">Hakkımızda</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="MaRSB_destek.html" class="flex items-center px-4 py-3 text-sm font-semibold rounded-lg sidebar-active group-[.is-collapsed]:justify-center">
+                                <svg class="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
+                                </svg>
+                                <span class="ml-3 group-[.is-collapsed]:hidden">Destek</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                
+            </div>
+        </aside>
+        
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="bg-white shadow-sm h-20 flex items-center justify-between px-8 z-50 flex-shrink-0 sticky top-0">
+                
+                <div class="flex-1 max-w-xl">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </div>
+                        <input type="text" placeholder="Ara..." class="w-full bg-slate-100 border-2 border-transparent rounded-full py-2 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-6 ml-6">
+                    <a href="#" class="text-gray-600 hover:text-blue-600 transition">
+                        <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                        </svg>
+                    </a>
+                    
+                    <div class="relative" id="profile-menu">
+                        <button id="profile-button" class="flex items-center space-x-2 text-sm font-semibold text-gray-700 hover:text-blue-600 transition">
+                            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span class="hidden md:inline">Hesabım</span>
+                        </button>
+                        <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl py-2 z-20">
+                            <a href="MaRSB_hakkimizda.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-slate-100">Hakkımızda</a>
+                            <div class="border-t my-1"></div>
+                            <a href="#" data-logout class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">Çıkış Yap</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="flex-1 overflow-y-auto bg-white">
+                
+                <!-- Başlık Alanı -->
+                <div class="bg-slate-50 border-b border-slate-200">
+                    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                        <h1 class="text-4xl font-extrabold text-slate-900">Destek & Yardım Merkezi</h1>
+                        <p class="mt-4 text-lg text-slate-600 max-w-3xl">
+                            Sorularınız mı var? Cevapları burada bulabilir veya bizimle iletişime geçebilirsiniz.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- İçerik Alanı -->
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                    
+                    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-16">
+                        
+                        <!-- SSS -->
+                        <div class="lg:col-span-2">
+                            <h2 class="text-3xl font-bold text-slate-800 mb-8">Sıkça Sorulan Sorular</h2>
+                            
+                            <div class="space-y-6">
+                                <details class="bg-white p-6 rounded-lg shadow-md border border-slate-200 group">
+                                    <summary class="flex items-center justify-between cursor-pointer text-lg font-semibold text-slate-800 group-hover:text-blue-600">
+                                        Siparişimi nasıl takip edebilirim?
+                                    </summary>
+                                    <div class="mt-4 text-slate-600">
+                                        <p>Siparişlerinizi, "Siparişler" sekmesinden kolayca takip edebilirsiniz.</p>
+                                    </div>
+                                </details>
+                                
+                                <details class="bg-white p-6 rounded-lg shadow-md border border-slate-200 group">
+                                    <summary class="flex items-center justify-between cursor-pointer text-lg font-semibold text-slate-800 group-hover:text-blue-600">
+                                        Faturamı nasıl görüntüleyebilirim?
+                                    </summary>
+                                    <div class="mt-4 text-slate-600">
+                                        <p>Tüm e-faturalar "Raporlar" bölümünde yer almaktadır.</p>
+                                    </div>
+                                </details>
+
+                                <details class="bg-white p-6 rounded-lg shadow-md border border-slate-200 group">
+                                    <summary class="flex items-center justify-between cursor-pointer text-lg font-semibold text-slate-800 group-hover:text-blue-600">
+                                        Şifremi unuttum, ne yapmalıyım?
+                                    </summary>
+                                    <div class="mt-4 text-slate-600">
+                                        <p>"Şifremi Unuttum" linkine tıklayarak yenileme bağlantısı alabilirsiniz.</p>
+                                    </div>
+                                </details>
+                            </div>
+                        </div>
+                        
+                        <!-- Destek Formu -->
+                        <div class="lg:col-span-1">
+                            <div class="bg-white p-8 rounded-lg shadow-lg border border-slate-200 sticky top-28">
+                                <h2 class="text-2xl font-bold text-slate-800 mb-6 pb-4 border-b border-slate-200">Destek Talebi Oluştur</h2>
+                                <form class="space-y-6">
+                                    <div>
+                                        <label for="support_subject" class="block text-sm font-semibold text-slate-700 mb-2">Konu</label>
+                                        <input type="text" id="support_subject" placeholder="Talebinizin konusunu yazın" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                                    </div>
+                                     <div>
+                                        <label for="support_order_id" class="block text-sm font-semibold text-slate-700 mb-2">İlgili Sipariş No</label>
+                                        <input type="text" id="support_order_id" placeholder="Örn: MRSB-12345" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                                    </div>
+                                    <div>
+                                        <label for="support_message" class="block text-sm font-semibold text-slate-700 mb-2">Mesajınız</label>
+                                        <textarea id="support_message" rows="6" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition" placeholder="Sorununuzu detaylıca açıklayın..."></textarea>
+                                    </div>
+                                    <div class="text-right pt-4">
+                                        <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-700 transition duration-200">
+                                            Destek Talebi Gönder
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                </div>
+                
+                <!-- Footer -->
+                <footer class="bg-slate-800 text-slate-300"> 
+                    <div class="container mx-auto px-12 py-12">
+                        <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
+                            <div>
+                                <h4 class="text-lg font-semibold text-white mb-4">MaRSB</h4>
+                                <p class="text-sm">Tedarik zincirinizi dijitalleştirerek işletmenizi bir adım öne taşıyın.</p>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-white mb-4">Hızlı Erişim</h4>
+                                <ul>
+                                    <li><a href="MaRSB_hakkimizda.html" class="hover:text-white transition">Hakkımızda</a></li>
+                                    <li><a href="MaRSB_destek.html" class="hover:text-white transition">Destek</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-white mb-4">İletişim</h4>
+                                <ul class="space-y-2 text-sm">
+                                    <li>+90 555 123 45 67</li>
+                                    <li>info@marsb.com</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="border-t border-slate-700 mt-8 pt-6 text-center text-sm">
+                            <p>&copy; 2024 MaRSB. Tüm hakları saklıdır.</p>
+                        </div>
+                    </div>
+                </footer>
+
+            </main>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Auth yönetimi - Shared sayfa
+            const auth = new AuthManager();
+            
+            // Sidebar Toggle Script
+            const toggleClose = document.getElementById('menu-toggle-close');
+            const toggleOpen = document.getElementById('menu-toggle-open');
+            const sidebar = document.getElementById('sidebar');
+
+            function toggleMenu() {
+                sidebar.classList.toggle('w-64');
+                sidebar.classList.toggle('w-20');
+                sidebar.classList.toggle('is-collapsed');
+            }
+
+            if (toggleClose && toggleOpen && sidebar) {
+                toggleClose.addEventListener('click', toggleMenu);
+                toggleOpen.addEventListener('click', toggleMenu);
+            }
+            
+            // Profile Menu
+            const profileButton = document.getElementById('profile-button');
+            const profileDropdown = document.getElementById('profile-dropdown');
+            const profileMenu = document.getElementById('profile-menu');
+
+            if (profileButton && profileDropdown && profileMenu) {
+                profileButton.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    profileDropdown.classList.toggle('hidden');
+                });
+
+                document.addEventListener('click', function (event) {
+                    if (!profileMenu.contains(event.target)) {
+                        profileDropdown.classList.add('hidden');
+                    }
+                });
+            }
+            
+            // Anasayfa linkini user type'a göre ayarla
+            const homeLink = document.getElementById('homeLink');
+            if (homeLink) {
+                homeLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const userType = auth.getUserType();
+                    if (userType === 'bayi') {
+                        window.location.href = '/bayi/yenibyiweb.html';
+                    } else if (userType === 'isletme') {
+                        window.location.href = '/işletme/isletme_ana.html';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
